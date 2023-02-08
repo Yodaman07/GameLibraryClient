@@ -1,0 +1,192 @@
+html {
+    padding: 0;
+    margin: 0;
+    background: linear-gradient(180deg, #6197FF 0%, #1F407E 100%);
+    height: -webkit-fill-available;
+    overflow: hidden;
+    font-family: 'Inter', sans-serif;
+}
+
+
+.sidebar-container {
+    width: 120px;
+    height: 100vh;
+    display: flex;
+    position: absolute;
+    left: 0;
+    top: 0;
+    justify-content: center;
+    align-items: center;
+}
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 60px;
+}
+
+.game-selection {
+    display: flex;
+    flex-direction: column;
+    left: 30px;
+    background: #364561;
+    box-shadow: 10px 0px 20px 5px rgb(0 0 0 / 50%);
+    gap: 110px;
+    border-radius: 10px;
+    top: 0px;
+    align-items: center;
+    padding: 10px;
+    height: fit-content;
+}
+
+.item-sel {
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+    border-radius: 17px;
+    flex: none;
+    background: #80A9F6;
+
+}
+
+
+.item-unsel {
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+    border-radius: 17px;
+    flex: none;
+    cursor: pointer;
+    background: #242424;
+}
+
+
+
+.settings-background {
+    background: #364561;
+    box-shadow: 10px 0px 20px 5px rgb(0 0 0 / 50%);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+#settings-item {
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+    border-radius: 17px;
+    flex: none;
+    align-items: center;
+    background: #242424;
+    cursor: pointer;
+}
+
+
+.content {
+    position: absolute;
+    width: auto;
+    left: 94px;
+    top: 0px;
+    right: 0px;
+    height: 100vh;
+
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+/* https://stackoverflow.com/questions/32802202/how-to-center-a-flex-container-but-left-align-flex-items */
+.gamedisplay {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, max-content));
+    grid-gap: 20px;
+    place-content: center;
+    padding-top: 20px;
+}
+
+.game {
+    width: 300px;
+    height: 200px;
+
+    background: #1E5FDE;
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.25);
+    border-radius: 30px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.img-container {
+    display: flex;
+    width: 300px;
+    height: 200px;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.img {
+    width: 100px;
+    height: 150px;
+    background-color: black;
+    object-fit: cover;
+    border-radius: 10px;
+    position: relative;
+    left: 20px;
+}
+
+.name-container {
+    width: 180px;
+    height: 200px;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    /* background-color: #f0f8ff87; */
+    align-items: flex-end;
+}
+
+.name {
+    position: absolute;
+    color: white;
+    font-family: 'Inter', serif;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+.time-container {
+    width: 180px;
+    height: 200px;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: -30px;
+}
+
+.time {
+    position: absolute;
+    color: white;
+    font-family: 'Inter', serif;
+    display: flex;
+    justify-content: flex-start;
+    font-size: small;
+    height: 1px;
+}
+
+
+
+.stats-container {
+    width: 180px;
+    height: 200px;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.percent {
+    position: absolute;
+    color: white;
+    font-family: 'Inter', serif;
+    display: flex;
+    justify-content: flex-start;
+    font-size: small;
+}
