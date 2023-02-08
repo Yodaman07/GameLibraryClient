@@ -1,7 +1,7 @@
 html {
     padding: 0;
     margin: 0;
-    background: linear-gradient(180deg, #6197FF 0%, #1F407E 100%);
+    /*background: linear-gradient(180deg, #6197FF 0%, #1F407E 100%);*/
     height: -webkit-fill-available;
     overflow: hidden;
     font-family: 'Inter', sans-serif;
