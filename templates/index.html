@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" style="background: linear-gradient(180deg, {{theme['colors'][0]}} 0%, {{theme['colors'][1]}} 100%)">
+<html lang="en" style="background: linear-gradient(180deg, {{themes[currentTheme]['colors'][0]}} 0%, {{themes[currentTheme]['colors'][1]}} 100%)">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -19,7 +19,7 @@
     <div class="content">
         <div class="gamedisplay">
             {%for i in gameData%}
-                <div class="game">
+                <div class="game" style="background: {{themes[currentTheme]['colors'][2]}}">
 
                     <div class="img-container">
                         <img class="img" src="{{i['img']}}">
@@ -46,21 +46,21 @@
     <div class="sidebar-container">
         
         <div class="sidebar">
-            <div class="game-selection">
-                {%for i in range(4)%}
-                    {%if i+1 == 1%}
-                        <div class="item-sel">
-                            <img src="/static/img/{{i+1}}.svg" alt="Img" width="32px" height="32px">
+            <div class="game-selection" style="background: {{ themes[currentTheme]['colors'][3] }}">
+                {%for i in themes%}
+                    {%if i == currentTheme%}
+                        <div class="item-sel" style="background: {{themes[currentTheme]['colors'][4]}}">
+                            <img src="{{themes[i]['icon']}}" alt="Img" width="32px" height="32px">
                         </div>
                     {%else%}
                         <div class="item-unsel">
-                            <img src="/static/img/{{i+1}}.svg" alt="Img" width="32px" height="32px">
+                            <img src="{{themes[i]['icon']}}" alt="Img" width="32px" height="32px">
                         </div>
                     {%endif%}
                 {%endfor%}
             </div>
 
-            <div class="settings-background">
+            <div class="settings-background" style="background: {{ themes[currentTheme]['colors'][3] }}">
                 <div id="settings-item">
                     <img src="/static/img/gear.svg" alt="" width="32px", height="32px">
                 </div>

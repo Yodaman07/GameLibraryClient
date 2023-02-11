@@ -85,7 +85,7 @@ app = Flask(__name__)
 app.secret_key = secret_key
 
 # [BG1, BG2, GameBG, SidebarBG, Sel, text]
-theme = {
+themes = {
     "steam": {'colors': ["#6197FF", "#1F407E", "#1E5FDE", "#364561", "#80A9F6", "#FFFFFF"], 'icon': '/static/img/steam.svg'},
     "xbox": {'colors': ["#48BD4C", "#18641B", "#11D019", "#386D3A", "#82C985", "#FFFFFF"], 'icon': '/static/img/xbox.svg'},
     "playstation": {'colors': ["#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF"], 'icon': '/static/img/playstation.svg'},
@@ -95,7 +95,7 @@ theme = {
 
 @app.route('/')
 def home():
-    return render_template("index.html", gameData=getSteamGames(steam_id), theme=theme["steam"])
+    return render_template("index.html", gameData=getSteamGames(steam_id), themes=themes, currentTheme="steam")
 
 
 @app.route('/settings')

@@ -30,7 +30,6 @@ html {
     display: flex;
     flex-direction: column;
     left: 30px;
-    background: #364561;
     box-shadow: 10px 0px 20px 5px rgb(0 0 0 / 50%);
     gap: 110px;
     border-radius: 10px;
@@ -46,8 +45,6 @@ html {
     padding: 8px;
     border-radius: 17px;
     flex: none;
-    background: #80A9F6;
-
 }
 
 
@@ -64,7 +61,6 @@ html {
 
 
 .settings-background {
-    background: #364561;
     box-shadow: 10px 0px 20px 5px rgb(0 0 0 / 50%);
     padding: 10px;
     border-radius: 10px;
@@ -106,8 +102,6 @@ html {
 .game {
     width: 300px;
     height: 200px;
-
-    background: #1E5FDE;
     box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.25);
     border-radius: 30px;
     display: flex;
@@ -146,6 +140,7 @@ html {
     position: absolute;
     color: white;
     font-family: 'Inter', serif;
+    font-weight: 700;
     display: flex;
     justify-content: center;
     text-align: center;
@@ -165,6 +160,7 @@ html {
     position: absolute;
     color: white;
     font-family: 'Inter', serif;
+    font-weight: 700;
     display: flex;
     justify-content: flex-start;
     font-size: small;
@@ -186,6 +182,7 @@ html {
     position: absolute;
     color: white;
     font-family: 'Inter', serif;
+    font-weight: 700;
     display: flex;
     justify-content: flex-start;
     font-size: small;
