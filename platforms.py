@@ -39,13 +39,14 @@ class Cache:
             json.dump(loaded, f, indent=True)
 
     def get(self, appid):
+
         with open(self.cache_file, "r") as f:
             loaded = json.load(f)
         for profile in loaded['profiles']:
             for k, value in profile.items():
                 if k == self.profile_id:
                     for game in value:
-                        if game['appid'] == int(appid):
+                        if int(game['appid']) == int(appid):
                             return game
 
     def set(self, game_list):
@@ -62,6 +63,7 @@ class Cache:
 
     def check_if_data_exists(self, appid, time_last_played):
         game = self.get(appid)
+        # print(f"Checking for {game} and {time_last_played}")
         try:
             # game['time_last_played'] is the cached time and the time_last_played is the current val
             if game["time_last_played"] == time_last_played:
@@ -89,9 +91,11 @@ class Steam:
         r = requests.get(getDataURL)
         for i in r.json()["response"]["games"]:
             if self.cache.check_if_data_exists(i['appid'], i['rtime_last_played']):
+                print("Steam - data exists...")
                 game_data = self.cache.get(i['appid'])
                 gameList.append(game_data)
             else:
+                print("Steam - getting data...")
                 name = i["name"]
                 img = f"https://steamcdn-a.akamaihd.net/steam/apps/{i['appid']}/library_600x900.jpg"
                 if requests.get(img).status_code == 404:
@@ -149,17 +153,55 @@ class Xbox:
         game_list = []
         headers = {"accept": "*/*", 'x-authorization': self.api_key}
         r = requests.get(f"https://xbl.io/api/v2/achievements/player/{self.xuid}", headers=headers)
+        if r.status_code == 200:
+            for game in r.json()["titles"]:
+                if ("XboxOne" or "XboxSeries" or "Xbox360") in game["devices"]:
+                    if self.cache.check_if_data_exists(game["titleId"], game['titleHistory']['lastTimePlayed']):
+                        print("XBOX - data exists...")
 
-        for game in r.json()["titles"]:
-            if self.cache.check_if_data_exists(game["titleId"], game['titleHistory']['lastTimePlayed']):
-                game_data = self.cache.get(game['appid'])
-                game_list.append(game_data)
-            else:
-                game_list.append(
-                    {"time_last_played": game['titleHistory']['lastTimePlayed'], "appid": game['titleId'], "name": game['name'], "time": '0',
-                    "img": game["displayImage"],
-                    "percent": game["achievement"]["progressPercentage"], "alt-percent": str(game["achievement"]["currentAchievements"]) + "/" + str(game["achievement"]["totalAchievements"])}
-                )
+                        game_data = self.cache.get(game['titleId'])
+                        game_list.append(game_data)
+                    else:
+                        print("XBOX - getting data...")
+                        percent = self.getPercent(game['titleId'])
+                        print(percent)
+                        game_list.append(
+                            {"time_last_played": game['titleHistory']['lastTimePlayed'], "appid": int(game['titleId']),
+                             "name": game['name'], "time": '0',
+                             "img": game["displayImage"],
+                             "percent": percent[0],
+                             "alt-percent": percent[1]}
+                        )
         self.cache.set(game_list)
         return game_list
 
+    def getPercent(self, appid):
+        decimal = 0.00
+        print("Getting Percent")
+        # Old xbox (360) games require the achievements from the endpoint that gets the games
+        # New xbox (one) games require the achievements from the endpoint below
+        totalAchievementsPlayer = 0
+        headers = {"accept": "*/*", 'x-authorization': self.api_key}
+        r = requests.get(f"https://xbl.io/api/v2/achievements/player/{self.xuid}/{appid}", headers=headers)
+        try:
+            totalAchievementsGame = len(r.json()["achievements"])
+            for i in r.json()["achievements"]:
+                try:
+                    if i["progressState"] == "Achieved":
+                        totalAchievementsPlayer += 1
+                except KeyError:
+                    continue
+            try:
+                decimal = (totalAchievementsPlayer / totalAchievementsGame)
+            except ZeroDivisionError:
+                req = requests.get(f"https://xbl.io/api/v2/achievements/player/{self.xuid}", headers=headers).json()
+                for title in req["titles"]:
+                    if int(title["titleId"]) == int(appid):
+                        ach = title["achievement"]
+                        totalAchievementsPlayer = ach["currentAchievements"]
+                        totalAchievementsGame = ach["totalAchievements"]
+                        decimal = 0 if totalAchievementsGame == 0 else totalAchievementsPlayer / totalAchievementsGame
+
+            return [round(decimal * 100, 2), f"{totalAchievementsPlayer}/{totalAchievementsGame}"]
+        except KeyError:
+            return [0.00, '0/0']
