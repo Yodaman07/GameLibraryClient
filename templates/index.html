@@ -20,25 +20,23 @@
         <div class="gamedisplay">
             {%for i in gameData%}
                 <div class="game" style="background: {{themes[currentTheme]['colors'][2]}}">
-
                     <div class="img-container">
-                        <img class="img" src="{{i['img']}}">
+                        <img class="img" id="img-{{ currentTheme }}" src="{{i['img']}}">
                     </div>
 
-                    <div class="name-container">
-                        <p class="name">{{i["name"]}}</p> 
+                    <div class="name-container" id="name-{{ currentTheme }}">
+                        <p class="name">{{i["name"]}}</p>
                     </div>
 
-                    <div class="time-container">
+                    <div class="time-container" id="time-{{ currentTheme }}">
                         <p class="time">{{" ".join(i["time"])}}</p>
                     </div>
 
-                    <div class="stats-container">
-                        
+                    <div class="stats-container" id="stats-{{ currentTheme }}">
                         <p class="percent">{{i["alt-percent"]}} &#183; {{i["percent"]}}%</p>
                     </div>
+                </div>
 
-                </div>    
             {%endfor%}
         </div>
     </div>
