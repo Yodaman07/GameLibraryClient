@@ -1,0 +1,8 @@
+html {
+    padding: 0;
+    margin: 0;
+    height: -webkit-fill-available;
+    background: linear-gradient(180deg, #6197FF 0%, #1F407E 100%);
+    overflow: hidden;
+    font-family: 'Inter', sans-serif;
+}
