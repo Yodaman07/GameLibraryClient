@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, request
+from flask import Flask, render_template, session, request, escape
 from dotenv import load_dotenv
 import platforms
 import os
@@ -54,7 +54,7 @@ def currentTheme():
             if themes[i]['icon'] == request.json['theme_icon']:
                 session['theme'] = i
         print(f"Redirecting to {session['theme']}")
-    return request.json
+    return escape(request.json)
 
 
 if __name__ == '__main__':
