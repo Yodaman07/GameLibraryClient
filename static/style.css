@@ -108,6 +108,28 @@ html {
     justify-content: flex-end;
 }
 
+
+.img-alt-1{
+    /*background-color: black;*/
+    object-fit: cover;
+    border-radius: 10px;
+    position: relative;
+    left: 20px;
+    opacity: 50%;
+    /*border: solid black 5px;*/
+    filter: blur(2px);
+}
+
+
+
+.img-alt-2{
+    position: absolute;
+    width: 100px;
+    transform: translateX(20px);
+    border-radius: 10px;
+    display: flex;
+}
+
 #img-steam{
     width: 100px;
     height: 150px;

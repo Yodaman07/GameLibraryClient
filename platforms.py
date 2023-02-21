@@ -91,33 +91,30 @@ class Steam:
         r = requests.get(getDataURL)
         for i in r.json()["response"]["games"]:
             if self.cache.check_if_data_exists(i['appid'], i['rtime_last_played']):
-                print("Steam - data exists...")
+                print(f"Steam - data exists... ({i['appid']})")
                 game_data = self.cache.get(i['appid'])
                 gameList.append(game_data)
             else:
-                print("Steam - getting data...")
+                print(f"Steam - getting data... ({i['appid']})")
                 name = i["name"]
                 img = f"https://steamcdn-a.akamaihd.net/steam/apps/{i['appid']}/library_600x900.jpg"
+                alt_img = False
                 if requests.get(img).status_code == 404:
                     img = f"https://steamcdn-a.akamaihd.net/steam/apps/{i['appid']}/header.jpg"
+                    alt_img = True
 
                 timeM = i["playtime_forever"] % 60
                 timeH = i["playtime_forever"] // 60
 
-                if timeH > 1:
-                    h = f"{timeH} hrs"
-                elif timeH == 1:
-                    h = f"{timeH} hr"
-                else:
-                    h = f"0 hr"
+                h = f"{timeH} hrs" if timeH > 1 else f"{timeH} hr"
                 m = f"{timeM} mins" if timeM > 1 else f"{timeM} min"
-                time = [h, m]
+                time = h + " " + m
                 percent = self.getPercentCompletion(i['appid'], self.steamID)
                 # https://stackoverflow.com/questions/27862725/how-to-get-last-played-on-for-steam-game-using-steam-api
 
                 gameList.append(
                     {"time_last_played": i['rtime_last_played'], "appid": i['appid'], "name": name, "time": time,
-                     "img": img,
+                     "img": img, 'alt_img': alt_img,
                      "percent": percent[0], "alt-percent": percent[1]}
                 )
 
@@ -143,41 +140,52 @@ class Steam:
 
 
 class Xbox:
-    def __init__(self, xuid, api_key):
+    def __init__(self, xuid, api_key, includeDemos):
         self.xuid = xuid
         self.api_key = api_key
         self.cache = Cache("xboxcache.json", xuid)
+        self.includeDemos = includeDemos
+        self.gamesResponse = {}
 
     def games(self):
         self.cache.configFile()
         game_list = []
         headers = {"accept": "*/*", 'x-authorization': self.api_key}
         r = requests.get(f"https://xbl.io/api/v2/achievements/player/{self.xuid}", headers=headers)
+        self.gamesResponse = r.json()
+
         if r.status_code == 200:
-            for game in r.json()["titles"]:
+            for game in self.gamesResponse["titles"]:
                 if ("XboxOne" or "XboxSeries" or "Xbox360") in game["devices"]:
                     if self.cache.check_if_data_exists(game["titleId"], game['titleHistory']['lastTimePlayed']):
-                        print("XBOX - data exists...")
+                        print(f"XBOX - data exists... ({game['titleId']})")
 
                         game_data = self.cache.get(game['titleId'])
                         game_list.append(game_data)
                     else:
-                        print("XBOX - getting data...")
-                        percent = self.getPercent(game['titleId'])
-                        print(percent)
+                        print(f"XBOX - getting data... ({game['titleId']})")
+                        try:
+                            percent = self.getPercent(game['titleId'])
+                            time = self.getTimePlayed(game['titleId'])
+                        except KeyError:
+                            self.cache.set(game_list)
+                            break
+
                         game_list.append(
                             {"time_last_played": game['titleHistory']['lastTimePlayed'], "appid": int(game['titleId']),
-                             "name": game['name'], "time": '0',
-                             "img": game["displayImage"],
+                             "name": game['name'], "time": time,
+                             "img": game["displayImage"], 'alt_img': False,
                              "percent": percent[0],
                              "alt-percent": percent[1]}
                         )
-        self.cache.set(game_list)
-        return game_list
+
+        if game_list is not []:
+            self.cache.set(game_list)
+        return self.checkDemos(game_list)
 
     def getPercent(self, appid):
         decimal = 0.00
-        print("Getting Percent")
+        # print("Getting Percent")
         # Old xbox (360) games require the achievements from the endpoint that gets the games
         # New xbox (one) games require the achievements from the endpoint below
         totalAchievementsPlayer = 0
@@ -194,7 +202,7 @@ class Xbox:
             try:
                 decimal = (totalAchievementsPlayer / totalAchievementsGame)
             except ZeroDivisionError:
-                req = requests.get(f"https://xbl.io/api/v2/achievements/player/{self.xuid}", headers=headers).json()
+                req = self.gamesResponse
                 for title in req["titles"]:
                     if int(title["titleId"]) == int(appid):
                         ach = title["achievement"]
@@ -205,3 +213,31 @@ class Xbox:
             return [round(decimal * 100, 2), f"{totalAchievementsPlayer}/{totalAchievementsGame}"]
         except KeyError:
             return [0.00, '0/0']
+
+    def getTimePlayed(self, appid):
+        headers = {"accept": "*/*", 'x-authorization': self.api_key}
+        r = requests.get(f"https://xbl.io/api/v2/achievements/stats/{appid}", headers=headers)
+        try:
+            stats = r.json()['statlistscollection'][0]['stats']
+            s = stats[0]
+        except IndexError:
+            return "N/A"
+
+        try:
+            time = int(s['value'])
+            minutes = time % 60
+            hr = time // 60
+            h = f"{hr} hrs" if hr > 1 else f"{hr} hr"
+            m = f"{minutes} mins" if minutes > 1 else f"{minutes} min"
+            timePlayed = h + " " + m
+        except KeyError:
+            timePlayed = "N/A"
+        return timePlayed
+
+    def checkDemos(self, game_list):
+        newlist = game_list.copy()
+        if not self.includeDemos:
+            for c, i in enumerate(game_list):
+                if "demo" in i['name'].lower():
+                    newlist.remove(i)
+        return newlist

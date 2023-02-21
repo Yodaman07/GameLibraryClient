@@ -37,7 +37,7 @@ def home():
     if session["theme"] == "steam":
         data = platforms.Steam(steam_id, steam_key).games()
     elif session["theme"] == "xbox":
-        data = platforms.Xbox(xuid, xbl_key).games()
+        data = platforms.Xbox(xuid, xbl_key, False).games()
 
     return render_template("index.html", gameData=data, themes=themes, currentTheme=session['theme'])
 

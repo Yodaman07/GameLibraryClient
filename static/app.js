@@ -1,5 +1,3 @@
-
-
 $(document).ready(function () {
     let selector = $("#settings-item, .item-unsel")
 
