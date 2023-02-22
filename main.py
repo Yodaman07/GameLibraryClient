@@ -28,6 +28,12 @@ themes = {
                'icon': '/static/img/switch.svg'}
 }
 
+settings_items = {
+    "profile": {'icon': 'static/img/profile.svg'},
+    "cache": {'icon': 'static/img/cache.svg'},
+    "credits": {'icon': 'static/img/credits.svg'},
+}
+
 
 @app.route('/')
 def home():
@@ -44,20 +50,29 @@ def home():
 
 @app.route('/settings')
 def settings():
-    return render_template("settings.html")
+    if not session.get('item'):
+        session['item'] = "profile"
+    return render_template("settings.html", sidebar_items=settings_items, currentItem=session['item'])
 
 
-@app.route('/data/current_theme', methods=["GET", "POST"])
+@app.route('/data/get_current', methods=["GET", "POST"])
 def currentTheme():
     if request.method == "POST":
-        for i in themes:
-            if themes[i]['icon'] == request.json['theme_icon']:
-                session['theme'] = i
-        print(f"Redirecting to {session['theme']}")
+        if request.json['from'] == "/":
+            for i in themes:
+                if themes[i]['icon'] == request.json['icon']:
+                    session['theme'] = i
+            print(f"Redirecting to {session['theme']}")
+        elif request.json['from'] == "/settings":
+            for i in settings_items:
+                if settings_items[i]['icon'] == request.json['icon']:
+                    session['item'] = i
+            print(f"Redirecting to {session['item']}")
+
     return escape(request.json)
 
 
 if __name__ == '__main__':
     app.run(debug=True)
 
-#host='0.0.0.0', port=2000
+# host='0.0.0.0', port=2000

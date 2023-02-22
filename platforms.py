@@ -39,7 +39,6 @@ class Cache:
             json.dump(loaded, f, indent=True)
 
     def get(self, appid):
-
         with open(self.cache_file, "r") as f:
             loaded = json.load(f)
         for profile in loaded['profiles']:

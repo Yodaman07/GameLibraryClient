@@ -4,13 +4,48 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
     <link rel="stylesheet" href="/static/settings/style.css">
-    <script src="/static/settings/app.js"></script>
-    <title>Settings</title>
-    <p>Image Credits: https://icons8.com/icon/83754/gear</p>
-    <a target="_blank" href="https://icons8.com/icon/9R3Rk7hGJ4o8/nintendo-switch-logo">Nintendo Switch Logo</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap" rel="stylesheet">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="/static/page-control.js"></script>
+
+    <title>{{currentItem.title()}} Settings</title>
+
+
+<!-- <p>Image Credits: https://icons8.com/icon/83754/gear</p> -->
+<!-- <a target="_blank" href="https://icons8.com/icon/9R3Rk7hGJ4o8/nintendo-switch-logo">Nintendo Switch Logo</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a> -->
 </head>
-<body>
-    
-</body>
+    <body>
+
+        <div class="sidebar-container">
+            <div class="sidebar">
+                <div class="item-selection">
+                    {%for i in sidebar_items%}
+                        {%if i == currentItem%}
+                            <div class="item-sel">
+                                <img src="{{sidebar_items[i]['icon']}}" alt="Img" width="32px" height="32px">
+                            </div>
+                        {%else%}
+                            <div class="item-unsel">
+                                <img src="{{sidebar_items[i]['icon']}}" alt="Img" width="32px" height="32px">
+                            </div>
+                        {%endif%}
+                    {%endfor%}
+                </div>
+
+                <div class="back-background">
+                    <div id="back-item">
+                        <img src="/static/img/back.svg" alt="" width="32px", height="32px">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </body>
 </html>

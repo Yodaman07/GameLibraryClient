@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    let selector = $("#settings-item, .item-unsel")
+    let selector = $("#settings-item, #back-item, .item-unsel")
 
     selector.mouseover(function () {
         $(this).css('background', "rgba(36, 36, 36, 0.49)");
@@ -26,12 +26,14 @@ function getNewPage(elmnt) {
     let filePath = elmnt.children().attr('src')
     if (filePath === "/static/img/gear.svg") {
         window.location.href = "/settings"
-    }else{
+    } else if (filePath == "/static/img/back.svg") {
+        window.location.href = "/"
+    } else {
         console.log("fetching")
-        fetch("/data/current_theme", {
+        fetch("/data/get_current", {
             method: "POST",
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({"theme_icon": filePath})
-        }).then(()=>window.location.reload())
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ "icon": filePath, "from": window.location.pathname })
+        }).then(() => window.location.reload())
     }
 }
