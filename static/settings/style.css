@@ -110,6 +110,7 @@ html {
 }
 
 
+
 .column-1 {
     display: flex;
     flex-direction: column;
@@ -167,9 +168,17 @@ html {
 }
 
 
-.text-content {
+.credit-content {
     display: flex;
     align-items: center;
     width: 25%;
     justify-content: center;
+}
+
+
+.profile-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 40px;
 }

@@ -52,7 +52,7 @@ def home():
 def settings():
     if not session.get('item'):
         session['item'] = "profile"
-    return render_template("settings.html", sidebar_items=settings_items, currentItem=session['item'])
+    return render_template("settings.html", sidebar_items=settings_items, currentItem=session['item'], loggedin = False)
 
 
 @app.route('/data/get_current', methods=["GET", "POST"])
