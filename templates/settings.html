@@ -7,6 +7,7 @@
 
 
     <link rel="stylesheet" href="/static/settings/style.css">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap" rel="stylesheet">
@@ -45,6 +46,61 @@
                 </div>
 
             </div>
+        </div>
+
+
+        <div class="content">
+            {% if currentItem.lower() == "profile" %}
+                <div class="title">
+                    <h1>Account Information</h1>
+                </div>
+            {% elif currentItem.lower() == "credits" %}
+                <div class="title">
+                    <h1>Credits</h1>
+                </div>
+
+                <div class="text-content">
+                    <div class="column-1-container">
+                        <div class="column-1">
+                            <p>Images Used:</p>
+                            <p>Apis Used:</p>
+                            <p>Created By:</p>
+                            <p>Github Repo:</p>
+                        </div>
+                    </div>
+
+                    <div class="column-2-container">
+                        <div class="column-2">
+                            <div class="combo">
+                                <p class="links">
+                                    <a target="_blank" href="https://icons8.com/icon/83754/gear"> <img src="/static/img/gear.svg" alt="gear" width="32px" height="32px"> </a>
+                                </p>
+                                <p class="links">
+                                    <a target="_blank" href="https://icons8.com/icon/9R3Rk7hGJ4o8/nintendo-switch-logo"> <img src="/static/img/switch.svg" alt="nintendo-switch" width="32px" height="32px"> </a>
+                                </p>
+                            </div>
+
+                            <div class="combo">
+                                <p class="links">
+                                    <a target="_blank" href="https://steamcommunity.com/dev">Steam API</a>
+                                </p>
+                                <p class="links">
+                                    <a target="_blank" href="https://xbl.io/">OpenXBL</a>
+                                </p>
+                            </div>
+
+
+                            <p id="name">Ayaan Irshad</p>
+
+                            <p class="links">
+                                <a target="_blank" href="https://github.com/Yodaman07/GameLibraryClient">Source Code</a>
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+
+            {% endif %}
         </div>
 
     </body>
