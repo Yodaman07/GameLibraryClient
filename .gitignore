@@ -132,4 +132,6 @@ data/steamcache.json
 data/xboxcache.json
 data/userdata.txt
 
+.DS_Store
+
 .idea
