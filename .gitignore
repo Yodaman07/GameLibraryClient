@@ -128,7 +128,8 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-steamcache.json
-xboxcache.json
+data/steamcache.json
+data/xboxcache.json
+data/userdata.txt
 
 .idea

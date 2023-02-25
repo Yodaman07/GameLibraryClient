@@ -1,6 +1,7 @@
-from flask import Flask, render_template, session, request, escape
+from flask import Flask, render_template, session, request, escape, url_for, redirect
 from dotenv import load_dotenv
 import platforms
+from userdata import UserData
 import os
 
 load_dotenv()
@@ -52,7 +53,7 @@ def home():
 def settings():
     if not session.get('item'):
         session['item'] = "profile"
-    return render_template("settings.html", sidebar_items=settings_items, currentItem=session['item'], loggedin = False)
+    return render_template("settings.html", sidebar_items=settings_items, currentItem=session['item'], loggedin=False)
 
 
 @app.route('/data/get_current', methods=["GET", "POST"])
@@ -68,8 +69,16 @@ def currentTheme():
                 if settings_items[i]['icon'] == request.json['icon']:
                     session['item'] = i
             print(f"Redirecting to {session['item']}")
-
     return escape(request.json)
+
+
+@app.route('/data/accounts/<action>', methods=['GET', 'POST'])
+def accountData(action):
+    if action == "signup" and request.method == "POST":
+        ud = UserData(request.form['email'], request.form['pswrd'])
+        ud.configure_file()
+        ud.create_account()
+    return redirect(url_for("settings"))
 
 
 if __name__ == '__main__':

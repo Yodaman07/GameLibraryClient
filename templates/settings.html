@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "settings-base.html" %}
 {% block profile %}
     {{ super() }}
     <div class="title">
@@ -6,14 +6,16 @@
     </div>
     {% if not loggedin %}
         <div class="profile-content">
-            <form class="profile-content" action="#" method="post">
-                <input type="button" value="Log In">
+            <div class="ln1">
+                <button class="btn">Log In</button>
                 <p>Or</p>
-                <input type="button" value="Sign Up">
-            </form>
+                <button class="btn" onclick="signup()">Sign Up</button>
+            </div>
+            <p>To access all of the apps features</p>
         </div>
     {% endif %}
 {% endblock %}
+
 {% block credits %}
     {{ super() }}
     <div class="title">

@@ -78,7 +78,7 @@ class Steam:
     def __init__(self, steamID, api_key):
         self.steamID = steamID
         self.api_key = api_key
-        self.cache = Cache("steamcache.json", steamID)
+        self.cache = Cache("data/steamcache.json", steamID)
 
     def games(self):
 
@@ -142,7 +142,7 @@ class Xbox:
     def __init__(self, xuid, api_key, includeDemos):
         self.xuid = xuid
         self.api_key = api_key
-        self.cache = Cache("xboxcache.json", xuid)
+        self.cache = Cache("data/xboxcache.json", xuid)
         self.includeDemos = includeDemos
         self.gamesResponse = {}
 

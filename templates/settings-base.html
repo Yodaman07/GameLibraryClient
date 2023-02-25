@@ -14,14 +14,32 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script src="/static/page-control.js"></script>
+    <script src="/static/settings/app.js"></script>
 
     <title>{{currentItem.title()}} Settings</title>
 
-<!-- <p>Image Credits: https://icons8.com/icon/83754/gear</p> -->
-<!-- <a target="_blank" href="https://icons8.com/icon/9R3Rk7hGJ4o8/nintendo-switch-logo">Nintendo Switch Logo</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a> -->
 </head>
     <body>
+        <!-- <div class="signup-container">
+            
+        </div> -->
 
+        <div class="bg-block">
+            <div class="signup">
+                <p>Create your account</p>
+                <div class="form">
+                    <form action="{{url_for('accountData', action='signup') }}" method="post">
+                        <div class="typed">    
+                            <input type="email" name="email" id="email">
+                            <input type="password" name="pswrd" id="pswrd">
+                        </div>    
+                        <input type="submit" value="Create" >
+                    </form>
+                </div>
+
+            </div>
+        </div>
+        
         <div class="sidebar-container">
             <div class="sidebar">
                 <div class="item-selection">
