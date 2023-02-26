@@ -77,7 +77,8 @@ def accountData(action):
     if action == "signup" and request.method == "POST":
         ud = UserData(request.form['email'], request.form['pswrd'])
         ud.configure_file()
-        ud.create_account()
+        ca = ud.create_account()
+
     return redirect(url_for("settings"))
 
 
