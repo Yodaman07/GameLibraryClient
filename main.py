@@ -15,7 +15,6 @@ xuid = os.getenv("XUID")
 secret_key = os.getenv("SECRET_KEY")
 app = Flask(__name__)
 app.secret_key = secret_key
-# Websocket?
 
 # [BG1, BG2, GameBG, SidebarBG, Sel, Highlight color, Text]
 themes = {

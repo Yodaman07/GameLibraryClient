@@ -26,10 +26,10 @@ function getNewPage(elmnt) {
     let filePath = elmnt.children().attr('src')
     if (filePath === "/static/img/gear.svg") {
         window.location.href = "/settings"
-    } else if (filePath == "/static/img/back.svg") {
+    } else if (filePath === "/static/img/back.svg") {
         window.location.href = "/"
     } else {
-        console.log("fetching")
+        console.log("Changing tab...")
         fetch("/data/get_current", {
             method: "POST",
             headers: { 'Content-Type': 'application/json' },
