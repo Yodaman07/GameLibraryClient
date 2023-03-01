@@ -1,7 +1,6 @@
 from flask import Flask, render_template, session, request, escape, url_for, redirect
 from dotenv import load_dotenv
 import platforms
-from flask_socketio import SocketIO
 from userdata import UserData
 import os
 
@@ -16,7 +15,6 @@ xuid = os.getenv("XUID")
 secret_key = os.getenv("SECRET_KEY")
 app = Flask(__name__)
 app.secret_key = secret_key
-socketio = SocketIO(app)
 
 # [BG1, BG2, GameBG, SidebarBG, Sel, Highlight color, Text]
 themes = {
@@ -84,6 +82,6 @@ def accountData(action):
 
 
 if __name__ == '__main__':
-    socketio.run(app, debug=True)
+    app.run(debug=True)
 
 # host='0.0.0.0', port=2000
