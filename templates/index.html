@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" id='html' style="background: linear-gradient(180deg, #6197FF 0%, #1F407E 100%)">
+<html lang="en" style="background: linear-gradient(180deg, {{themes[currentTheme]['colors'][0]}} 0%, {{themes[currentTheme]['colors'][1]}} 100%)">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,7 +11,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap" rel="stylesheet">
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
     <script src="/static/page-control.js"></script>
 
     <title>{{currentTheme.title()}} Library</title>
@@ -20,7 +19,7 @@
     <div class="content">
         <div class="gamedisplay">
             {%for i in gameData%}
-                <div class="game" style="background: #1E5FDE">
+                <div class="game" style="background: {{themes[currentTheme]['colors'][2]}}">
                     <div class="img-container">
                         {% if not i['alt_img'] %}
                             <img class="img" id="img-{{ currentTheme }}" src="{{i['img']}}">
@@ -52,10 +51,10 @@
     <div class="sidebar-container">
         
         <div class="sidebar">
-            <div class="game-selection" style="background: #364561">
+            <div class="game-selection" style="background: {{ themes[currentTheme]['colors'][3] }}">
                 {%for i in themes%}
                     {%if i == currentTheme%}
-                        <div class="item-sel" style="background: #80A9F6">
+                        <div class="item-sel" style="background: {{themes[currentTheme]['colors'][4]}}">
                             <img src="{{themes[i]['icon']}}" alt="Img" width="32px" height="32px">
                         </div>
                     {%else%}
@@ -66,7 +65,7 @@
                 {%endfor%}
             </div>
 
-            <div class="settings-background" style="background: #364561">
+            <div class="settings-background" style="background: {{ themes[currentTheme]['colors'][3] }}">
                 <div id="settings-item">
                     <img src="/static/img/gear.svg" alt="" width="32px", height="32px">
                 </div>
