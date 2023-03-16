@@ -5,9 +5,9 @@ import os
 
 
 class UserData:
-    def __init__(self, username, password):
+    def __init__(self, email, password):
         load_dotenv()
-        self.username = username
+        self.email = email
         self.password = password
         self.file_path = "data/userdata.txt"
         self.encryption_key = os.getenv("ENCRYPTION_KEY")
@@ -22,35 +22,41 @@ class UserData:
                 file.write(str(data)[2:-1])
                 print("Successfully Encrypted Template Data")
 
-    def create_account(self):
-        accountExists = False
+    def create_account(self, username):
         f = Fernet(self.encryption_key)
         with open(self.file_path, 'r+') as file:
             contents = file.read()
             data = f.decrypt(contents)
             decryptedData = json.loads(data)
             # print(decryptedData)
-            if self.username or self.password == "":
-                if decryptedData['accounts']:
-                    for i in decryptedData['accounts']:
-                        if i['username'] == self.username:
-                            accountExists = True
-                    if not accountExists:
-                        self.write_account(decryptedData)
-                    else:
-                        return "Email is already in use"
-                else:
-                    self.write_account(decryptedData)
-            return "Unable to create account"
+            if self.email == "" or self.password == "" or username == "":
+                return {"code": 400, "msg": "Unable to create account"}
 
-    def write_account(self, decryptedData):
+            if decryptedData['accounts']:  # already stored account data
+                for i in decryptedData['accounts']:
+                    if i['email'] == self.email:
+                        return {"code": 403, "msg": "Email is already in use"}
+                    elif i['username'] == username:
+                        return {"code": 403, "msg": "Username is already in use"}
+                # If this account is unique, its created
+                self.write_account(decryptedData, username)
+                return {"code": 201, "msg": "Account Created!"}
+            else:  # First account added
+                self.write_account(decryptedData, username)
+                return {"code": 201, "msg": "Account Created!"}
+
+    def write_account(self, decryptedData, username):
         f = Fernet(self.encryption_key)
         with open(self.file_path, "w") as file:
             decryptedData['accounts'].append(
-                {"username": self.username, "password": self.password}
+                {"email": self.email, "password": self.password, "username": username}
             )
             json_str = json.dumps(decryptedData)
-            # print(decryptedData)
+            print(decryptedData)
             encryptedData = f.encrypt(json_str.encode(encoding='utf-8'))
-            # print(encryptedData)
-            file.write(str(encryptedData)[2:-1])
+            print(encryptedData)
+            file.write(str(encryptedData)[2:-1])  # [2:-1] bc we don't want b''
+
+    def login(self):
+        f = Fernet(self.encryption_key)
+        # Add login detection

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, request, escape, url_for, redirect
+from flask import Flask, render_template, session, request, escape, url_for, redirect, jsonify
 from dotenv import load_dotenv
 import platforms
 from userdata import UserData
@@ -73,12 +73,15 @@ def currentTheme():
 
 @app.route('/data/accounts/<action>', methods=['GET', 'POST'])
 def accountData(action):
+    response = {'code': 400, "msg": "REQUEST ERROR"}
+    print(f'Account Request Received: {action} ; Method: {request.method}')
     if action == "signup" and request.method == "POST":
-        ud = UserData(request.form['email'], request.form['pswrd'])
+        ud = UserData(request.json['email'], request.json['password'])
         ud.configure_file()
-        ca = ud.create_account()
-
-    return redirect(url_for("settings"))
+        response = ud.create_account(request.json['username'])
+    elif action == "login" and request.method == "POST":
+        ud = UserData(request.json['email'], request.json['password'])
+    return jsonify(response)
 
 
 if __name__ == '__main__':

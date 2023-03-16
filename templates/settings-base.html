@@ -20,23 +20,34 @@
 
 </head>
     <body>
-        <!-- <div class="signup-container">
-            
-        </div> -->
-
+        <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
         <div class="bg-block">
             <div class="signup">
                 <p>Create your account</p>
                 <div class="form">
-                    <form action="{{url_for('accountData', action='signup') }}" method="post">
-                        <div class="typed">    
+                    <div id="sign-up-form">
+                        <div class="typed">
                             <input type="email" name="email" id="email" placeholder="Email">
                             <input type="password" name="pswrd" id="pswrd" placeholder="Password">
-                        </div>    
-                        <input type="submit" value="Create" >
-                    </form>
+                            <input type="text" name="username" id="username" placeholder="Username">
+                        </div>
+                        <input type="submit" value="Create" onclick="submit_signup_form()">
+                        <p id="response"></p>
+                    </div>
                 </div>
-
+            </div>
+            <div class="login">
+                <p>Log in to your account</p>
+                <div class="form">
+                    <div id="log-in-form">
+                        <div class="typed">
+                            <input type="email" name="email" id="email" placeholder="Email">
+                            <input type="password" name="pswrd" id="pswrd" placeholder="Password">
+                        </div>
+                        <input type="submit" value="Log In" onclick="submit_login_form()">
+                        <p id="response"></p>
+                    </div>
+                </div>
             </div>
         </div>
         

@@ -185,14 +185,16 @@ html {
 }
 
 .profile-container{
-    height: min-content;
     background-color: #cebdfe;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 33px;
+    padding: 40px;
     border-radius: 35px;
     box-shadow: 9px 9px 4px rgb(0 0 0 / 25%);
+    width: 350px;
+    height: 200px;
+    justify-content: center;
 }
 
 .ln1 {
@@ -235,7 +237,7 @@ html {
     justify-content: center;
 }
 
-.signup {
+.signup, .login {
     display: none;
     z-index: 1000;
     position: absolute;
@@ -250,13 +252,13 @@ html {
 }
 
 
-.signup form {
+.signup #sign-up-form, .login #log-in-form{
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.signup p {
+.signup p , .login p{
     font-size: 25px;
     font-weight: 700;
 }
@@ -266,6 +268,8 @@ html {
     flex-direction: row;
     gap: 10px;
     padding: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .form {
@@ -276,7 +280,7 @@ html {
     align-items: center;
 }
 
-.form > form > input{
+.form > #sign-up-form > input, .form > #log-in-form > input{
     border: none;
     margin-top: 20px;
     width: 125px;
@@ -298,4 +302,12 @@ html {
     border: none;
     font-size: medium;
     font-weight: 600;
+}
+
+
+#response{
+    position: absolute;
+    bottom: 10px;
+    font-size: 20px;
+    color: #710000;
 }
