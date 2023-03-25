@@ -27,12 +27,12 @@
                 <div class="form">
                     <div id="sign-up-form">
                         <div class="typed">
-                            <input type="email" name="email" id="email" placeholder="Email">
-                            <input type="password" name="pswrd" id="pswrd" placeholder="Password">
+                            <input type="email" name="email" id="email-signup" placeholder="Email">
+                            <input type="password" name="pswrd" id="pswrd-signup" placeholder="Password">
                             <input type="text" name="username" id="username" placeholder="Username">
                         </div>
-                        <input type="submit" value="Create" onclick="submit_signup_form()">
-                        <p id="response"></p>
+                        <input id="create-signup" type="submit" value="Create" onclick="submit_signup_form()">
+                        <p id="response-signup"></p>
                     </div>
                 </div>
             </div>
@@ -41,11 +41,23 @@
                 <div class="form">
                     <div id="log-in-form">
                         <div class="typed">
-                            <input type="email" name="email" id="email" placeholder="Email">
-                            <input type="password" name="pswrd" id="pswrd" placeholder="Password">
+                            <input type="email" name="email" id="email-login" placeholder="Email">
+                            <input type="password" name="pswrd" id="pswrd-login" placeholder="Password">
                         </div>
-                        <input type="submit" value="Log In" onclick="submit_login_form()">
-                        <p id="response"></p>
+                        <input id="create-login" type="submit" value="Log In" onclick="submit_login_form()">
+                        <p id="response-login"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="edit-service">
+                <p id="edit-service-title"></p>
+                <div class="form">
+                    <div id="edit-service-form">
+                        <div class="typed">
+                            <input type="text" name="new_credential" id="new_cred" placeholder="" style="width: 200px" data-service="">
+                        </div>
+                        <input id="create-edit_service" type="submit" value="Save" onclick="submit_service_form()">
+                        <p id="response-service"></p>
                     </div>
                 </div>
             </div>

@@ -40,6 +40,9 @@ def home():
     data = {}
     if not session.get('theme'):
         session['theme'] = "steam"
+    if not session.get("loggedin"):
+        session['loggedin'] = {"state": False, "username": None}
+
     if session["theme"] == "steam":
         data = platforms.Steam(steam_id, steam_key).games()
     elif session["theme"] == "xbox":
@@ -52,7 +55,10 @@ def home():
 def settings():
     if not session.get('item'):
         session['item'] = "profile"
-    return render_template("settings.html", sidebar_items=settings_items, currentItem=session['item'], loggedin=False)
+    if not session.get("loggedin"):
+        session['loggedin'] = {"state": False, "username": None}
+    return render_template("settings.html", sidebar_items=settings_items, currentItem=session['item'],
+                           loggedin=session['loggedin']['state'], username=session['loggedin']['username'], themes=themes)
 
 
 @app.route('/data/get_current', methods=["GET", "POST"])
@@ -75,12 +81,23 @@ def currentTheme():
 def accountData(action):
     response = {'code': 400, "msg": "REQUEST ERROR"}
     print(f'Account Request Received: {action} ; Method: {request.method}')
-    if action == "signup" and request.method == "POST":
-        ud = UserData(request.json['email'], request.json['password'])
-        ud.configure_file()
-        response = ud.create_account(request.json['username'])
-    elif action == "login" and request.method == "POST":
-        ud = UserData(request.json['email'], request.json['password'])
+    if request.method == "POST":
+        if action == "signup":
+            ud = UserData(email=request.json['email'], password=request.json['password'])
+            ud.configure_file()
+            response = ud.create_account(request.json['username'])
+        elif action == "login":
+            ud = UserData(email=request.json['email'], password=request.json['password'])
+            ud.configure_file()
+            response = ud.login()
+        elif action == "add_service":
+            if session['loggedin']['state']:
+                ud = UserData(username=session['loggedin']['username'])
+                ud.configure_file()
+                ud.add_service(request.json)
+
+    if response['code'] == 200 or response['code'] == 201:
+        session['loggedin'] = {"state": True, "username": response['user']}
     return jsonify(response)
 
 

@@ -15,6 +15,19 @@
                 <p>To access all the apps features</p>
             </div>
         </div>
+    {% elif loggedin %}
+        <h2>Welcome {{username}}</h2>
+        <div class="edit-services">
+            {% for i in themes %}
+                <div class="platforms" style="background: {{ themes[i]['colors'][0] }}">
+                    <div class="img-container">
+                        <img class="img" src="{{themes[i]['icon']}}" width="32px" height="32px">
+                    </div>
+                    <p>{{i.title()}}</p>
+                    <button class="edit" onclick="edit_service('{{i.title()}}')">Edit</button>
+                </div>
+            {% endfor %}
+        </div>
     {% endif %}
 {% endblock %}
 
