@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, request, escape, url_for, redirect, jsonify
+from flask import Flask, render_template, session, request, escape, jsonify
 from dotenv import load_dotenv
 import platforms
 from userdata import UserData
@@ -110,7 +110,7 @@ def accountData(action):
 
     if response['code'] == 200 or response['code'] == 201:  # Successful log in
         session['loggedin'] = {"state": True, "username": response['user']}
-    return jsonify(response)
+    return jsonify(escape(response))
 
 
 if __name__ == '__main__':

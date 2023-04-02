@@ -150,6 +150,8 @@ function toggle_secret_key(img){
                 console.log(response)
                 if (response['code'] === 202){
                     elmnt.prev().text(response['msg'])
+                    elmnt.prev().css({"line-height":"unset","height":"auto", "font-size":"small"})
+
                 }else{
                     elmnt.prev().text(" ")
                 }
@@ -165,5 +167,7 @@ function toggle_secret_key(img){
         elmnt.attr("src", "/static/img/eye-closed.png")
         elmnt.data("state", "hidden")
         elmnt.prev().text("**********************")
+        elmnt.prev().css({"line-height":"22px","height":"15px","font-size":"20px"})
+
     }
 }

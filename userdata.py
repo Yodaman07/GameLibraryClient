@@ -12,7 +12,6 @@ class UserData:
         self.email = email
         self.password = password
         self.username = username
-        self.loggedin = False
         self.file_path = "data/userdata.txt"
         self.encryption_key = os.getenv("ENCRYPTION_KEY")
 
@@ -49,11 +48,9 @@ class UserData:
                         return {"code": 403, "msg": "Username is already in use", "user": None}
                 # If this account is unique, its created
                 self.write_account(decryptedData, username)
-                self.loggedin = True
                 return {"code": 201, "msg": "Account Created!", "user": username}
             else:  # First account added
                 self.write_account(decryptedData, username)
-                self.loggedin = True
                 return {"code": 201, "msg": "Account Created!", "user": username}
 
     def write_account(self, decryptedData, username):
@@ -71,7 +68,7 @@ class UserData:
     def login(self):
         if self.email == "" or self.password == "":
             raise InvalidCredentialsError("email_pswrd")
-
+        loggedIn = False
         f = Fernet(self.encryption_key)
         with open(self.file_path, "r") as file:
             contents = file.read()
@@ -80,10 +77,10 @@ class UserData:
             if decryptedData['accounts']:
                 for i in decryptedData['accounts']:
                     if i['email'] == self.email and i['password'] == self.password:
-                        self.loggedin = True
+                        loggedIn = True
                         return {"code": 200, "msg": "Successfully logged in!", "user": i['username']}
-                    else:
-                        return {"code": 401, "msg": "Your email or password is incorrect", "user": None}
+                if not loggedIn:
+                    return {"code": 401, "msg": "Your email or password is incorrect", "user": None}
             return {"code": 400, "msg": "Error finding account", "user": None}
 
     def service(self, method, service):
