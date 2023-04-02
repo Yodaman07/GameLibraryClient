@@ -38,14 +38,14 @@ class UserData:
             decryptedData = json.loads(data)
             # print(decryptedData)
             if self.email == "" or self.password == "" or username == "":
-                return {"code": 400, "msg": "Unable to create account", "user": None}
+                return {"code": 400, "msg": "Unable to create account", "user": "None"}
 
             if decryptedData['accounts']:  # already stored account data
                 for i in decryptedData['accounts']:
                     if i['email'] == self.email:
-                        return {"code": 403, "msg": "Email is already in use", "user": None}
+                        return {"code": 403, "msg": "Email is already in use", "user": "None"}
                     elif i['username'] == username:
-                        return {"code": 403, "msg": "Username is already in use", "user": None}
+                        return {"code": 403, "msg": "Username is already in use", "user": "None"}
                 # If this account is unique, its created
                 self.write_account(decryptedData, username)
                 return {"code": 201, "msg": "Account Created!", "user": username}
@@ -80,8 +80,8 @@ class UserData:
                         loggedIn = True
                         return {"code": 200, "msg": "Successfully logged in!", "user": i['username']}
                 if not loggedIn:
-                    return {"code": 401, "msg": "Your email or password is incorrect", "user": None}
-            return {"code": 400, "msg": "Error finding account", "user": None}
+                    return {"code": 401, "msg": "Your email or password is incorrect", "user": "None"}
+            return {"code": 400, "msg": "Error finding account", "user": "None"}
 
     def service(self, method, service):
         if self.username == "":

@@ -73,9 +73,11 @@ function submit_signup_form() {
         success: function (response) {
             console.log("SUCCESS!")
             console.log(response)
-            if (response["code"] !== 201){
-                $('#response-signup').text(response["msg"])
-            }else if (response["code"] === 201){
+            let res = response.toString().replaceAll("&#34;", "'").replaceAll("&#39;", "\"")
+            let r = JSON.parse(res)
+            if (r["code"] !== 201){
+                $('#response-signup').text(r["msg"])
+            }else if (r["code"] === 201){
                 window.location.reload()
             }
         },
@@ -100,9 +102,12 @@ function submit_login_form(){
         success: function (response) {
             console.log("SUCCESS!")
             console.log(response)
-            if (response["code"] !== 200){
-                $('#response-login').text(response["msg"])
-            }else if (response["code"] === 200){
+            let res = response.toString().replaceAll("&#34;", "'").replaceAll("&#39;", "\"")
+            let r = JSON.parse(res)
+            console.log(r['code'])
+            if (r["code"] !== 200){
+                $('#response-login').text(r["msg"])
+            }else if (r["code"] === 200){
                 window.location.reload()
             }
         },
@@ -123,9 +128,11 @@ function submit_service_form(){
         contentType: "application/json",
         success: function (response){
             console.log("SUCCESS!")
-            if (response["code"] !== 202){ // error
-                $('#response-service').text(response["msg"])
-            }else if (response["code"] === 202){
+            let res = response.toString().replaceAll("&#34;", "'").replaceAll("&#39;", "\"")
+            let r = JSON.parse(res)
+            if (r["code"] !== 202){ // error
+                $('#response-service').text(r["msg"])
+            }else if (r["code"] === 202){
                 window.location.reload() // success
             }
         },
@@ -148,14 +155,15 @@ function toggle_secret_key(img){
             url: "/data/accounts/get_service_" + service,
             success: function (response){
                 console.log(response)
-                if (response['code'] === 202){
-                    elmnt.prev().text(response['msg'])
+                let res = response.toString().replaceAll("&#34;", "'").replaceAll("&#39;", "\"")
+                let r = JSON.parse(res)
+                if (r['code'] === 202){
+                    elmnt.prev().text(r['msg'])
                     elmnt.prev().css({"line-height":"unset","height":"auto", "font-size":"small"})
 
                 }else{
                     elmnt.prev().text(" ")
                 }
-
             },
             error: function (xhr){
                 //Do Something to handle error

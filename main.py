@@ -55,7 +55,7 @@ def home():
     else:
         data = {}
 
-    return render_template("index.html", gameData=data, themes=themes, currentTheme=session['theme'])
+    return render_template("index.html", gameData=data, themes=themes, currentTheme=session['theme'], loggedin=session['loggedin']['state'])
 
 
 @app.route('/settings')

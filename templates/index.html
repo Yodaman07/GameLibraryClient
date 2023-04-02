@@ -16,6 +16,13 @@
     <title>{{currentTheme.title()}} Library</title>
 </head>
 <body>
+    {% if loggedin %}
+        <div class="top-bar">
+            <div id="option1"></div>
+            <div id="option2"></div>
+        </div>
+    {% endif %}
+
     <div class="content">
         <div class="gamedisplay">
             {%for i in gameData%}
