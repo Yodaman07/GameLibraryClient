@@ -88,36 +88,36 @@ class Steam:
         getDataURL = f"http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={self.api_key}&steamid={self.steamID}&format=json&include_appinfo=true&include_played_free_games=true"
 
         r = requests.get(getDataURL)
-        for i in r.json()["response"]["games"]:
-            if self.cache.check_if_data_exists(i['appid'], i['rtime_last_played']):
-                print(f"Steam - data exists... ({i['appid']})")
-                game_data = self.cache.get(i['appid'])
-                gameList.append(game_data)
-            else:
-                print(f"Steam - getting data... ({i['appid']})")
-                name = i["name"]
-                img = f"https://steamcdn-a.akamaihd.net/steam/apps/{i['appid']}/library_600x900.jpg"
-                alt_img = False
-                if requests.get(img).status_code == 404:
-                    img = f"https://steamcdn-a.akamaihd.net/steam/apps/{i['appid']}/header.jpg"
-                    alt_img = True
+        if r.status_code == 200:
+            for i in r.json()["response"]["games"]:
+                if self.cache.check_if_data_exists(i['appid'], i['rtime_last_played']):
+                    print(f"Steam - data exists... ({i['appid']})")
+                    game_data = self.cache.get(i['appid'])
+                    gameList.append(game_data)
+                else:
+                    print(f"Steam - getting data... ({i['appid']})")
+                    name = i["name"]
+                    img = f"https://steamcdn-a.akamaihd.net/steam/apps/{i['appid']}/library_600x900.jpg"
+                    alt_img = False
+                    if requests.get(img).status_code == 404:
+                        img = f"https://steamcdn-a.akamaihd.net/steam/apps/{i['appid']}/header.jpg"
+                        alt_img = True
 
-                timeM = i["playtime_forever"] % 60
-                timeH = i["playtime_forever"] // 60
+                    timeM = i["playtime_forever"] % 60
+                    timeH = i["playtime_forever"] // 60
 
-                h = f"{timeH} hrs" if timeH > 1 else f"{timeH} hr"
-                m = f"{timeM} mins" if timeM > 1 else f"{timeM} min"
-                time = h + " " + m
-                percent = self.getPercentCompletion(i['appid'], self.steamID)
-                # https://stackoverflow.com/questions/27862725/how-to-get-last-played-on-for-steam-game-using-steam-api
+                    h = f"{timeH} hrs" if timeH > 1 else f"{timeH} hr"
+                    m = f"{timeM} mins" if timeM > 1 else f"{timeM} min"
+                    time = h + " " + m
+                    percent = self.getPercentCompletion(i['appid'], self.steamID)
+                    # https://stackoverflow.com/questions/27862725/how-to-get-last-played-on-for-steam-game-using-steam-api
 
-                gameList.append(
-                    {"time_last_played": i['rtime_last_played'], "appid": i['appid'], "name": name, "time": time,
-                     "img": img, 'alt_img': alt_img,
-                     "percent": percent[0], "alt-percent": percent[1]}
-                )
-
-        self.cache.set(gameList)
+                    gameList.append(
+                        {"time_last_played": i['rtime_last_played'], "appid": i['appid'], "name": name, "time": time,
+                         "img": img, 'alt_img': alt_img,
+                         "percent": percent[0], "alt-percent": percent[1]}
+                    )
+            self.cache.set(gameList)
         return gameList
 
     def getPercentCompletion(self, appId, steamID):
@@ -139,10 +139,10 @@ class Steam:
 
 
 class Xbox:
-    def __init__(self, xuid, api_key, includeDemos):
-        self.xuid = xuid
+    def __init__(self, api_key, includeDemos):
         self.api_key = api_key
-        self.cache = Cache("data/xboxcache.json", xuid)
+        self.xuid = self.getXUID()
+        self.cache = Cache("data/xboxcache.json", self.getXUID())
         self.includeDemos = includeDemos
         self.gamesResponse = {}
 
@@ -150,7 +150,7 @@ class Xbox:
         self.cache.configFile()
         game_list = []
         headers = {"accept": "*/*", 'x-authorization': self.api_key}
-        r = requests.get(f"https://xbl.io/api/v2/achievements/player/{self.xuid}", headers=headers)
+        r = requests.get(f"https://xbl.io/api/v2/achievements", headers=headers)
         self.gamesResponse = r.json()
 
         if r.status_code == 200:
@@ -240,3 +240,41 @@ class Xbox:
                 if "demo" in i['name'].lower():
                     newlist.remove(i)
         return newlist
+
+    def getXUID(self):
+        # api_key is already validated
+        headers = {"accept": "*/*", "x-authorization": self.api_key}
+        response = requests.get("https://xbl.io/api/v2/player/summary", headers=headers)
+        if response.status_code == 200:
+            return response.json()['people'][0]['xuid']
+
+
+class ValidateCredentials:
+    def __init__(self, cred):
+        self.cred = cred
+
+    def validateSteam(self, api_key):
+        response = requests.get(
+            f"http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={api_key}&steamids={self.cred}")
+        if response.json()['response']['players']:  # verify account is public and can be reached
+            r = requests.get(
+                f"http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={api_key}&steamid={self.cred}&format=json")
+            # print(r.json()['response'])
+            try:
+                if r.json()['response']['game_count']:
+                    return {"code": 202, "msg": "Valid Steam Id"}
+            except KeyError:
+                return {"code": 401, "msg": "Unable to access Steam Account Data; Your account may be private"}
+        else:
+            return {"code": 404, "msg": "This Steam Account doesn't exist"}
+
+    def validateXbox(self):
+        # validate openxbl api key
+        headers = {"accept": "*/*", "x-authorization": self.cred}
+        response = requests.get("https://xbl.io/api/v2/account", headers=headers)
+        if response.status_code == 200:
+            return {"code": 202, "msg": "Valid OpenXBL API Key"}
+        elif response.status_code == 401:
+            return {"code": 401, "msg": "Invalid OpenXBL API Key"}
+        else:
+            return {"code": 404, "msg": "Unknown error"}

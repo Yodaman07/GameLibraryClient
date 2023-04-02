@@ -47,7 +47,7 @@ function edit_service(service){
     $(".signup").css('display', 'none');
 
 
-    $(cred).data("service", service)
+    $(cred).data("service", service.toLowerCase())
 
     $("#edit-service-title").text("Change " + service + " account data")
     if (service === "Steam"){
@@ -122,7 +122,12 @@ function submit_service_form(){
         data: JSON.stringify({"type":cred.data("service"),"data":cred.val()}),
         contentType: "application/json",
         success: function (response){
-            console.log(response)
+            console.log("SUCCESS!")
+            if (response["code"] !== 202){ // error
+                $('#response-service').text(response["msg"])
+            }else if (response["code"] === 202){
+                window.location.reload() // success
+            }
         },
         error: function (xhr) {
             //Do Something to handle error
@@ -130,4 +135,35 @@ function submit_service_form(){
             console.log(xhr)
         }
     })
+}
+
+function toggle_secret_key(img){
+    elmnt = $(img)
+    if (elmnt.data("state") === "hidden"){
+        elmnt.attr("src", "/static/img/eye.png")
+        elmnt.data("state", "visible")
+        let service = elmnt.data("service")
+        $.ajax({
+            type:"GET",
+            url: "/data/accounts/get_service_" + service,
+            success: function (response){
+                console.log(response)
+                if (response['code'] === 202){
+                    elmnt.prev().text(response['msg'])
+                }else{
+                    elmnt.prev().text(" ")
+                }
+
+            },
+            error: function (xhr){
+                //Do Something to handle error
+                console.log("ERROR:")
+                console.log(xhr)
+            }
+        })
+    }else if(elmnt.data("state") === "visible"){
+        elmnt.attr("src", "/static/img/eye-closed.png")
+        elmnt.data("state", "hidden")
+        elmnt.prev().text("**********************")
+    }
 }

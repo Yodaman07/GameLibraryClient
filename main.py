@@ -6,11 +6,11 @@ import os
 
 load_dotenv()
 
+# Xbox cache and load speeds
+
 steam_key = os.getenv("STEAM_API_KEY")
-steam_id = os.getenv("STEAM_ID")
 
 xbl_key = os.getenv("XBL_API_KEY")
-xuid = os.getenv("XUID")
 
 secret_key = os.getenv("SECRET_KEY")
 app = Flask(__name__)
@@ -43,10 +43,17 @@ def home():
     if not session.get("loggedin"):
         session['loggedin'] = {"state": False, "username": None}
 
-    if session["theme"] == "steam":
-        data = platforms.Steam(steam_id, steam_key).games()
-    elif session["theme"] == "xbox":
-        data = platforms.Xbox(xuid, xbl_key, False).games()
+    ud = UserData(username=session['loggedin']['username'])
+    service_key = ud.service("get", session['theme'])
+    print(service_key)
+    if session['loggedin']['state'] and service_key['code'] != 404:
+        if session["theme"] == "steam":
+            data = platforms.Steam(service_key['msg'], steam_key).games()
+            # ['msg'] is used as data in this case. Msg is used for consistency
+        elif session["theme"] == "xbox":
+            data = platforms.Xbox(service_key['msg'], False).games()
+    else:
+        data = {}
 
     return render_template("index.html", gameData=data, themes=themes, currentTheme=session['theme'])
 
@@ -58,7 +65,8 @@ def settings():
     if not session.get("loggedin"):
         session['loggedin'] = {"state": False, "username": None}
     return render_template("settings.html", sidebar_items=settings_items, currentItem=session['item'],
-                           loggedin=session['loggedin']['state'], username=session['loggedin']['username'], themes=themes)
+                           loggedin=session['loggedin']['state'], username=session['loggedin']['username'],
+                           themes=themes)
 
 
 @app.route('/data/get_current', methods=["GET", "POST"])
@@ -84,19 +92,23 @@ def accountData(action):
     if request.method == "POST":
         if action == "signup":
             ud = UserData(email=request.json['email'], password=request.json['password'])
-            ud.configure_file()
             response = ud.create_account(request.json['username'])
         elif action == "login":
             ud = UserData(email=request.json['email'], password=request.json['password'])
-            ud.configure_file()
             response = ud.login()
         elif action == "add_service":
             if session['loggedin']['state']:
                 ud = UserData(username=session['loggedin']['username'])
-                ud.configure_file()
-                ud.add_service(request.json)
+                response = ud.service("add", request.json)
+    elif request.method == "GET":
+        if "get_service_" in action:
+            if session['loggedin']['state']:
+                a = action
+                serviceName = a.replace("get_service_", "")
+                ud = UserData(username=session['loggedin']['username'])
+                response = ud.service("get", serviceName)
 
-    if response['code'] == 200 or response['code'] == 201:
+    if response['code'] == 200 or response['code'] == 201:  # Successful log in
         session['loggedin'] = {"state": True, "username": response['user']}
     return jsonify(response)
 

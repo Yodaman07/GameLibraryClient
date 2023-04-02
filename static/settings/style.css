@@ -118,12 +118,13 @@ body, html{
     width: inherit;
 }
 
-.column-1>p {
+.column-1>p:not(.links) {
     border-radius: 20px;
     background-color: #cebdfe;
     padding: 10px;
     font-weight: 600;
     height: 20px;
+    z-index: 1;
 }
 
 .links {
@@ -164,6 +165,7 @@ body, html{
     position: absolute;
     align-items: flex-end;
     width: inherit;
+    z-index: 1;
 }
 
 .credit-content {
@@ -171,6 +173,10 @@ body, html{
     align-items: center;
     width: 30%;
     justify-content: center;
+}
+
+.column-1 > p, .column-2 > p{
+    z-index: 999999;
 }
 
 /*PROFILE vvv*/
@@ -317,7 +323,7 @@ body, html{
 }
 
 
-#response-signup, #response-login{
+#response-signup, #response-login, #response-service{
     position: absolute;
     bottom: 10px;
     font-size: 20px;
@@ -373,6 +379,31 @@ body, html{
     left: 1vh;
 }
 
+.secret-creds{
+    display: flex;
+    position: absolute;
+    font-size: 20px;
+    font-weight: 600;
+    width: inherit;
+    height: inherit;
+    align-items: center;
+    justify-content: flex-end;
+    left: -110px;
+    gap: 10px;
+}
+
+#cred{
+    background: #00000094;
+    padding: 5px;
+    border-radius: 45px;
+    color: white;
+    
+    vertical-align: middle;
+    display: inline-block;
+    line-height: 22px;
+    height: 15px;
+}
+
 .edit{
     display: flex;
     position: absolute;
@@ -394,4 +425,11 @@ body, html{
 
 .edit:active{
     background: #101010;
+}
+
+.visibility-toggle{
+    background-color: #00000094;
+    border-radius: 10px;
+    padding: 5px;
+    cursor: pointer;
 }

@@ -1,5 +1,6 @@
 from cryptography.fernet import Fernet
 from dotenv import load_dotenv
+from platforms import ValidateCredentials
 import json
 import os
 
@@ -85,32 +86,60 @@ class UserData:
                         return {"code": 401, "msg": "Your email or password is incorrect", "user": None}
             return {"code": 400, "msg": "Error finding account", "user": None}
 
-    def add_service(self, serviceData):
+    def service(self, method, service):
         if self.username == "":
             raise InvalidCredentialsError("")
         updatedData = False
+        response = {}
         f = Fernet(self.encryption_key)
         with open(self.file_path, "r+") as file:
             contents = file.read()
             data = f.decrypt(contents)
             decryptedData = json.loads(data)
-            print(decryptedData)
+            # print(decryptedData)
             if decryptedData['accounts']:
                 for i in decryptedData['accounts']:
                     if i['username'] == self.username:  # finds current account
-                        for j in i['accountData']:  # searches through all of the service credentials
-                            if j['type'] == serviceData['type']:
-                                j['data'] = serviceData['data']
-                                updatedData = True
-                        if not updatedData:
-                            i['accountData'].append(serviceData)
-                            updatedData = True
+                        if method == "add":  # service data is dictionary
+                            serviceType = service['type']
+                            # code below validates service credentials
+                            vc = ValidateCredentials(service['data'])
+                            if serviceType == 'steam':
+                                response = vc.validateSteam(os.getenv("STEAM_API_KEY"))
+                            elif serviceType == 'xbox':
+                                response = vc.validateXbox()
+
+                            if response['code'] == 202: # 202 is the valid code
+                                for j in i['accountData']:  # searches through all of the service credentials
+                                    if j['type'] == serviceType:  # overwrites existing data
+                                        j['data'] = service['data']
+                                        updatedData = True
+                                if not updatedData:  # adds new data
+                                    i['accountData'].append(service) # service can be seen in settings/app.js
+                                    updatedData = True
+
+                        elif method == "get":  # service data is service name
+                            responseFound = False
+                            if i['accountData']:
+                                for j in i['accountData']:
+                                    if j['type'] == service:
+                                        response = {"code": 202, "msg": j['data']}
+                                        responseFound = True
+                                if not responseFound:
+                                    response = {"code": 404, "msg": "Requested service not found. Use the 'add' "
+                                                                    "method to add data to the desired account"}
+                            else:
+                                response = {"code": 404,
+                                            "msg": "No services found. Use the 'add' method to add data to the "
+                                                   "desired account"}
         if updatedData:
             with open(self.file_path, "w") as file:
                 json_str = json.dumps(decryptedData)
-                print(decryptedData)
+                # print(decryptedData)
                 encryptedData = f.encrypt(json_str.encode(encoding='utf-8'))
                 file.write(str(encryptedData)[2:-1])  # [2:-1] bc we don't want b''
+
+        return response
 
 
 class InvalidCredentialsError(Exception):

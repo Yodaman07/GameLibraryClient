@@ -24,6 +24,12 @@
                         <img class="img" src="{{themes[i]['icon']}}" width="32px" height="32px">
                     </div>
                     <p>{{i.title()}}</p>
+
+                    <div class="secret-creds">
+                        <span id="cred">**********************</span>
+                        <img src="/static/img/eye-closed.png" width="16px" height="16px" class="visibility-toggle" onclick="toggle_secret_key(this)" data-state="hidden" data-service="{{i}}">
+                    </div>
+
                     <button class="edit" onclick="edit_service('{{i.title()}}')">Edit</button>
                 </div>
             {% endfor %}
@@ -39,7 +45,7 @@
 
     <div class="credit-content">
         <div class="column-1">
-            <p>Images Used:</p>
+            <p class="links"><a target="_blank" href="http://icons8.com">Images Used (Icons8):</a></p>
             <p>Apis Used:</p>
             <p>Created By:</p>
             <p>Github Repo:</p>
@@ -52,6 +58,14 @@
                 </p>
                 <p class="links">
                     <a target="_blank" href="https://icons8.com/icon/9R3Rk7hGJ4o8/nintendo-switch-logo"> <img src="/static/img/switch.svg" alt="nintendo-switch" width="32px" height="32px"> </a>
+                </p>
+
+                <p class="links">
+                    <a target="_blank" href="https://icons8.com/icon/60022/eye"> <img src="/static/img/eye.png" alt="eye" width="32px" height="32px"> </a>
+                </p>
+
+                <p class="links">
+                    <a target="_blank" href="https://icons8.com/icon/59814/invisible"> <img src="/static/img/eye-closed.png" alt="eye-closed" width="32px" height="32px"> </a>
                 </p>
             </div>
 
