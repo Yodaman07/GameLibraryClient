@@ -1,22 +1,78 @@
 html {
-    padding: 0;
-    margin: 0;
     /*background: linear-gradient(180deg, #6197FF 0%, #1F407E 100%);*/
     height: -webkit-fill-available;
     overflow: hidden;
     font-family: 'Inter', sans-serif;
 }
 
+body, html{
+    padding: 0;
+    margin: 0;
+}
+
 .top-bar{
-
+    position: absolute;
+    height: 48px;
+    width: 90%;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0px 10px 20px 5px rgb(0 0 0 / 50%);
 }
 
-#option1{
-
+.top-bar-container{
+    height: 120px;
+    width: auto;
+    display: flex;
+    position: absolute;
+    left: 94px;
+    right: 0px;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999999;
 }
 
-#option2{
+#btn-collection{
+    display: flex;
+    gap: 15%;
+    align-items: center;
+    position: absolute;
+    width: -webkit-fill-available;
+    z-index: 999999;
+}
 
+.updated-time{
+    color: white;
+    display: flex;
+    text-decoration: underline;
+    align-items: center;
+    width: -webkit-fill-available;
+    position: absolute;
+    justify-content: flex-end;
+    right: 1vw;
+    gap: 5px;
+}
+
+.search-bar{
+    background-color: rgba(255,255,255,0.8);
+    display: flex;
+    align-items: center;
+    border-radius: 20px;
+    gap: 10px;
+    width: 40%;
+    color: #737373;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+#search-container{
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    width: -webkit-fill-available;
+}
+
+.search-bar img{
+    margin-left: 10px;
 }
 
 
@@ -36,6 +92,8 @@ html {
     flex-direction: column;
     align-items: center;
     gap: 60px;
+    position: absolute;
+    justify-content: center;
 }
 
 .game-selection {
@@ -68,8 +126,9 @@ html {
     flex: none;
     cursor: pointer;
     background: #242424;
+    width: fit-content;
+    height: fit-content;
 }
-
 
 .settings-background {
     box-shadow: 10px 0px 20px 5px rgb(0 0 0 / 50%);
@@ -93,12 +152,15 @@ html {
     position: absolute;
     width: auto;
     left: 94px;
-    top: 0px;
+    top: 94px;
+    /*120px being the space of 3 boxes minus the 20 pixel gap <-- IGNORE*/
     right: 0px;
-    height: 100vh;
+    height: calc(100vh - 94px);
 
     overflow-y: scroll;
     overflow-x: hidden;
+
+    z-index: 1;
 }
 
 /* https://stackoverflow.com/questions/32802202/how-to-center-a-flex-container-but-left-align-flex-items */

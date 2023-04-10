@@ -28,6 +28,8 @@ function getNewPage(elmnt) {
         window.location.href = "/settings"
     } else if (filePath === "/static/img/back.svg") {
         window.location.href = "/"
+    }else if (filePath === "/static/img/slider.svg"){
+        console.log("a")
     } else {
         console.log("Changing tab...")
         fetch("/data/get_current", {

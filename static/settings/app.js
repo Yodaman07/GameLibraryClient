@@ -156,13 +156,15 @@ function toggle_secret_key(img){
             success: function (response){
                 console.log(response)
                 let res = response.toString().replaceAll("&#34;", "'").replaceAll("&#39;", "\"")
-                let r = JSON.parse(res)
-                if (r['code'] === 202){
-                    elmnt.prev().text(r['msg'])
-                    elmnt.prev().css({"line-height":"unset","height":"auto", "font-size":"small"})
+                try {
+                    let r = JSON.parse(res)
+                    if (r['code'] === 202) {
+                        elmnt.prev().text(r['msg'])
+                        elmnt.prev().css({"line-height": "unset", "height": "auto", "font-size": "small"})
 
-                }else{
-                    elmnt.prev().text(" ")
+                    }
+                }catch (e) {
+                    elmnt.prev().text("")
                 }
             },
             error: function (xhr){

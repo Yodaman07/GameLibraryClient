@@ -17,9 +17,29 @@
 </head>
 <body>
     {% if loggedin %}
-        <div class="top-bar">
-            <div id="option1"></div>
-            <div id="option2"></div>
+        <div class="top-bar-container">
+            <div class="top-bar" style="background: {{ themes[currentTheme]['colors'][3] }}">
+                <div id="btn-collection">
+                    <div class="item-unsel">
+                        <img src="/static/img/slider.svg" alt="slider" width="32px" height="32px">
+                    </div>
+
+                     <div class="item-unsel">
+                        <img src="/static/img/filter.svg" alt="filter" width="32px" height="32px">
+                    </div>
+                </div>
+                <div id="search-container">
+                    <div class="search-bar">
+                        <img src="/static/img/search.svg" alt="search-icon" width="32px" height="32px">
+                        <p>Search for games...</p>
+                    </div>
+                </div>
+                <div class="updated-time">
+                    <img src="/static/img/sync.svg" alt="sync-icon" width="24px" height="24px">
+                    <p>Last Updated: 5s ago</p>
+                </div>
+
+            </div>
         </div>
     {% endif %}
 
