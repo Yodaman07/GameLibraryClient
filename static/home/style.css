@@ -28,7 +28,6 @@ body, html{
     right: 0px;
     align-items: center;
     justify-content: center;
-    z-index: 9999999;
 }
 
 #btn-collection{
@@ -37,7 +36,6 @@ body, html{
     align-items: center;
     position: absolute;
     width: -webkit-fill-available;
-    z-index: 999999;
 }
 
 .updated-time{
@@ -62,6 +60,20 @@ body, html{
     color: #737373;
     font-weight: 600;
     font-size: 15px;
+    z-index: 999;
+    border-style: none;
+}
+
+.search{
+    width: -webkit-fill-available;
+    height: -webkit-fill-available;
+    border-radius: inherit;
+    border-style: none;
+    background: bottom;
+    font-size: initial;
+    font-weight: 600;
+    user-select: none;
+    outline: none;
 }
 
 #search-container{
@@ -69,10 +81,21 @@ body, html{
     justify-content: center;
     position: absolute;
     width: -webkit-fill-available;
+    height: inherit;
 }
 
 .search-bar img{
     margin-left: 10px;
+}
+
+
+
+#btn-collection > div, #search-container > div, .updated-time > p, .updated-time > img{
+    z-index: 999999;
+    user-select: none;
+}
+#btn-collection > div, .updated-time > p, .updated-time > img{
+    cursor: pointer;
 }
 
 

@@ -38,17 +38,20 @@ class Cache:
         with open(self.cache_file, "w") as f:
             json.dump(loaded, f, indent=True)
 
-    def get(self, appid):
+    def get(self, appid=None):  # If appid is left unset, all player data will be returned
         with open(self.cache_file, "r") as f:
             loaded = json.load(f)
         for profile in loaded['profiles']:
             for k, value in profile.items():
                 if k == self.profile_id:
-                    for game in value:
-                        if int(game['appid']) == int(appid):
-                            return game
+                    if appid is not None:
+                        for game in value:
+                            if int(game['appid']) == int(appid):
+                                return game
+                    else:
+                        return value
 
-    def set(self, game_list):
+    def set(self, game_list):  # Only sets individually
         print("Setting...")
         # data is a dict formatted like {"img":img,"achievement_player":a_player,"achievement_game":a_game}
         with open(self.cache_file, "r+") as f:
@@ -141,8 +144,7 @@ class Steam:
 class Xbox:
     def __init__(self, api_key, includeDemos):
         self.api_key = api_key
-        self.xuid = self.getXUID()
-        self.cache = Cache("data/xboxcache.json", self.getXUID())
+        self.cache = Cache("data/xboxcache.json", self.api_key)
         self.includeDemos = includeDemos
         self.gamesResponse = {}
 
@@ -241,12 +243,13 @@ class Xbox:
                     newlist.remove(i)
         return newlist
 
-    def getXUID(self):
-        # api_key is already validated
-        headers = {"accept": "*/*", "x-authorization": self.api_key}
-        response = requests.get("https://xbl.io/api/v2/player/summary", headers=headers)
-        if response.status_code == 200:
-            return response.json()['people'][0]['xuid']
+    # XUID isn't necessary
+    # def getXUID(self, api_key):
+    #     # api_key is already validated
+    #     headers = {"accept": "*/*", "x-authorization": api_key}
+    #     response = requests.get("https://xbl.io/api/v2/player/summary", headers=headers)
+    #     if response.status_code == 200:
+    #         return response.json()['people'][0]['xuid']
 
 
 class ValidateCredentials:

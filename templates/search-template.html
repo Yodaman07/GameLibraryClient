@@ -1,0 +1,28 @@
+<div class="gamedisplay">
+    {%for i in gameData%}
+        <div class="game" style="background: {{themes[currentTheme]['colors'][2]}}">
+            <div class="img-container">
+                {% if not i['alt_img'] %}
+                    <img class="img" id="img-{{ currentTheme }}" src="{{i['img']}}">
+                {% else %}
+
+                    <img class="img-alt-1" id="img-{{ currentTheme }}" src="{{i['img']}}">
+
+                    <img class="img-alt-2" src="{{i['img']}}">
+                {% endif %}
+            </div>
+
+            <div class="name-container" id="name-{{ currentTheme }}">
+                <p class="name">{{i["name"]}}</p>
+            </div>
+
+            <div class="time-container" id="time-{{ currentTheme }}">
+                <p class="time">{{i["time"]}}</p>
+            </div>
+
+            <div class="stats-container" id="stats-{{ currentTheme }}">
+                <p class="percent">{{i["alt-percent"]}} &#183; {{i["percent"]}}%</p>
+            </div>
+        </div>
+    {%endfor%}
+</div>

@@ -1,6 +1,8 @@
 from flask import Flask, render_template, session, request, escape, jsonify
 from dotenv import load_dotenv
-import platforms
+
+from platforms import Steam, Xbox
+from sort import GameSort
 from userdata import UserData
 import os
 
@@ -37,25 +39,15 @@ settings_items = {
 
 @app.route('/')
 def home():
-    data = {}
     if not session.get('theme'):
         session['theme'] = "steam"
     if not session.get("loggedin"):
         session['loggedin'] = {"state": False, "username": None}
-
-    ud = UserData(username=session['loggedin']['username'])
-    service_key = ud.service("get", session['theme'])
-    print(service_key)
-    if session['loggedin']['state'] and service_key['code'] != 404:
-        if session["theme"] == "steam":
-            data = platforms.Steam(service_key['msg'], steam_key).games()
-            # ['msg'] is used as data in this case. Msg is used for consistency
-        elif session["theme"] == "xbox":
-            data = platforms.Xbox(service_key['msg'], False).games()
-    else:
-        data = {}
-
-    return render_template("index.html", gameData=data, themes=themes, currentTheme=session['theme'], loggedin=session['loggedin']['state'])
+    if not session.get('xuid'):
+        session['xuid'] = None
+    data = getDataFromTheme(session['theme'])
+    return render_template("index.html", gameData=data, themes=themes, currentTheme=session['theme'],
+                           loggedin=session['loggedin']['state'])
 
 
 @app.route('/settings')
@@ -64,9 +56,20 @@ def settings():
         session['item'] = "profile"
     if not session.get("loggedin"):
         session['loggedin'] = {"state": False, "username": None}
+    if not session.get('xuid'):
+        session['xuid'] = None
     return render_template("settings.html", sidebar_items=settings_items, currentItem=session['item'],
                            loggedin=session['loggedin']['state'], username=session['loggedin']['username'],
                            themes=themes)
+
+
+@app.route("/search_query")
+@app.route("/search_query/<query>")
+def searchQuery(query=""):
+    data = getDataFromTheme(session['theme'], True)
+    gs = GameSort(data)
+    return render_template("search-template.html", gameData=gs.search(query), themes=themes,
+                           currentTheme=session['theme'])
 
 
 @app.route('/data/get_current', methods=["GET", "POST"])
@@ -111,6 +114,33 @@ def accountData(action):
     if response['code'] == 200 or response['code'] == 201:  # Successful log in
         session['loggedin'] = {"state": True, "username": response['user']}
     return jsonify(escape(response))
+
+
+def getDataFromTheme(theme, cached=False):
+    data = []
+    ud = UserData(username=session['loggedin']['username'])
+    service_key = ud.service("get", session['theme'])
+    # print(service_key)
+    if session['loggedin']['state'] and service_key['code'] != 404:
+        if theme == "steam":
+            s = Steam(service_key['msg'], steam_key)
+            # ['msg'] is used as data in this case. Msg is used for consistency
+            if not cached:
+                data = s.games()
+            elif cached:
+                data = s.cache.get()
+
+        elif theme == "xbox":
+            x = Xbox(service_key['msg'], False)
+            if not cached:
+                data = x.games()
+            elif cached:
+                gameList = x.cache.get()
+                data = x.checkDemos(gameList)
+    else:
+        data = []
+
+    return data
 
 
 if __name__ == '__main__':
