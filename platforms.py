@@ -94,6 +94,7 @@ class Steam:
         if r.status_code == 200:
             for i in r.json()["response"]["games"]:
                 if self.cache.check_if_data_exists(i['appid'], i['rtime_last_played']):
+                    # TODO (fix) --> Currently doesn't update data for game names
                     print(f"Steam - data exists... ({i['appid']})")
                     game_data = self.cache.get(i['appid'])
                     gameList.append(game_data)
@@ -191,7 +192,8 @@ class Xbox:
         # New xbox (one) games require the achievements from the endpoint below
         totalAchievementsPlayer = 0
         headers = {"accept": "*/*", 'x-authorization': self.api_key}
-        r = requests.get(f"https://xbl.io/api/v2/achievements/player/{self.xuid}/{appid}", headers=headers)
+        r = requests.get(f"https://xbl.io/api/v2/achievements/player/{self.getXUID(self.api_key)}/{appid}",
+                         headers=headers)
         try:
             totalAchievementsGame = len(r.json()["achievements"])
             for i in r.json()["achievements"]:
@@ -244,12 +246,12 @@ class Xbox:
         return newlist
 
     # XUID isn't necessary
-    # def getXUID(self, api_key):
-    #     # api_key is already validated
-    #     headers = {"accept": "*/*", "x-authorization": api_key}
-    #     response = requests.get("https://xbl.io/api/v2/player/summary", headers=headers)
-    #     if response.status_code == 200:
-    #         return response.json()['people'][0]['xuid']
+    def getXUID(self, api_key):
+        # api_key is already validated
+        headers = {"accept": "*/*", "x-authorization": api_key}
+        response = requests.get("https://xbl.io/api/v2/player/summary", headers=headers)
+        if response.status_code == 200:
+            return response.json()['people'][0]['xuid']
 
 
 class ValidateCredentials:

@@ -10,6 +10,22 @@ body, html{
     margin: 0;
 }
 
+#back-item, .item-unsel{
+    background: #242424;
+}
+
+#back-item:hover, .item-unsel:hover{
+    background: rgba(36, 36, 36, 0.49);
+}
+
+#back-item:active, .item-unsel:active{
+    background: rgba(36, 36, 36, 0.88);
+}
+
+::-webkit-scrollbar{
+    background: inherit;
+}
+
 .sidebar-container {
     width: 120px;
     height: 100vh;
@@ -80,7 +96,6 @@ body, html{
     border-radius: 17px;
     flex: none;
     align-items: center;
-    background: #242424;
     cursor: pointer;
 }
 

@@ -72,6 +72,14 @@ def searchQuery(query=""):
                            currentTheme=session['theme'])
 
 
+@app.route("/sort/<method>")
+def sortData(method):
+    data = getDataFromTheme(session['theme'], True)
+    gs = GameSort(data)
+    return render_template("search-template.html", gameData=gs.sort(method), themes=themes,
+                           currentTheme=session['theme'])
+
+
 @app.route('/data/get_current', methods=["GET", "POST"])
 def currentTheme():
     if request.method == "POST":

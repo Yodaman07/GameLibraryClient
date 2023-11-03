@@ -10,6 +10,38 @@ body, html{
     margin: 0;
 }
 
+:root{
+    --selection_theme: #ffffff
+}
+/*Change for firefox*/
+::-webkit-scrollbar {
+    background-color: inherit;
+}
+
+::-webkit-scrollbar-thumb{
+    background-color: darkgrey;
+    border-radius: 20px;
+}
+
+::-webkit-scrollbar-thumb:hover{
+    background-color: grey;
+}
+
+
+
+#settings-item, .item-unsel, .sort-selection, .arrow{
+    transition: background-color 0.25s;
+    background-color: #242424;
+}
+
+#settings-item:hover, .item-unsel:hover, .arrow:hover{
+    background-color: rgba(36, 36, 36, 0.4);
+}
+
+#settings-item:active, .item-unsel:active, .arrow:active{
+    background-color: rgba(36, 36, 36, 0.88);
+}
+
 .top-bar{
     position: absolute;
     height: 48px;
@@ -94,9 +126,142 @@ body, html{
     z-index: 999999;
     user-select: none;
 }
-#btn-collection > div, .updated-time > p, .updated-time > img{
+.updated-time > p, .updated-time > img{
     cursor: pointer;
 }
+
+
+
+
+
+
+
+#circle-separator{
+    width: 10px;
+    height: 10px;
+    border-radius: 100%;
+    position: absolute;
+    top: 15px;
+}
+
+#dropdown-bar{
+    width: 48px;
+    position: absolute;
+    top: 30px;
+    bottom: 0px;
+    border-radius: 17px;
+    cursor: default;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 25px;
+    padding: inherit;
+}
+
+.dropdown{
+    width: 48px;
+    transform: translateY(48px);
+    height: 250px;
+    position: absolute;
+    padding: 0px 10px;
+    display: flex;
+    justify-content: center;
+    border-radius: 17px
+}
+
+
+.dropdown-container{
+    display: none;
+    flex-direction: column;
+    align-items: center;
+}
+
+/*https://stackoverflow.com/questions/5445491/height-equal-to-dynamic-width-css-fluid-layout*/
+.sort-selection{
+    color: white;
+    width: 100%;
+    padding-bottom: 50%;
+    height: 0;
+    border-radius: 15px;
+    font-size: 12px;
+    display: flex;
+    padding-top: 50%;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+
+.item-sel#sort{
+    transition: background-color 0.5s;
+}
+
+.item-unsel#sort{
+    transition: background-color 0.5s;
+}
+
+#arrow-up{
+    transform: rotate(0deg);
+}
+
+#arrow-down{
+    transform: rotate(180deg);
+}
+
+.arrow {
+    transition: background-color 0.2s;
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+    border-radius: 17px;
+    flex: none;
+    cursor: pointer;
+    width: fit-content;
+    height: fit-content;
+    align-items: center;
+}
+
+.arrow-sel{
+    transition: background-color 0.2s;
+    background-color: var(--selection_theme);
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+    border-radius: 17px;
+    flex: none;
+    cursor: pointer;
+    width: fit-content;
+    height: fit-content;
+    align-items: center;
+}
+
+.arrow > img, .arrow-sel > img{
+    pointer-events: none;
+}
+
+.sort-direction{
+    display: none;
+    position: absolute;
+    z-index: 1;
+    /*transform: translateX(50%);*/
+    height: -webkit-fill-available;
+    align-items: center;
+}
+
+.sort-direction-container{
+    display: flex;
+    border-radius: 17px;
+    gap: 10px;
+    padding: 13px 10px;
+    height: min-content;
+}
+
+
+#sort-gap{
+    width: 25px;
+    height: 74px;
+    margin-left: 45px;
+}
+
 
 
 .sidebar-container {
@@ -138,8 +303,8 @@ body, html{
     padding: 8px;
     border-radius: 17px;
     flex: none;
+    background-color: var(--selection_theme);
 }
-
 
 .item-unsel {
     display: flex;
@@ -148,9 +313,9 @@ body, html{
     border-radius: 17px;
     flex: none;
     cursor: pointer;
-    background: #242424;
     width: fit-content;
     height: fit-content;
+    align-items: center;
 }
 
 .settings-background {
@@ -166,7 +331,6 @@ body, html{
     border-radius: 17px;
     flex: none;
     align-items: center;
-    background: #242424;
     cursor: pointer;
 }
 
