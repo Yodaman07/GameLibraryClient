@@ -19,13 +19,20 @@ class GameSort:
 
     def sort(self, method):
         return_list = []
-        if method[0] == "a":
-            gl = self.game_list
-            if method[-2:] == "_a":  # default is ascending (false)
-                return_list = sorted(gl, key=lambda x: x['name'], reverse=False)
-            elif method[-2:] == "_d":
-                return_list = sorted(gl, key=lambda x: x['name'], reverse=True)
-        elif method[0] == "d":
-            return_list = self.game_list
+        gl = self.game_list
+        key = ''
+        if method[0] == "a": #A->Z
+            key = 'name'
+        elif method[0] == "t": #time
+            key = 'time_unformatted'
+        elif method[0] == "p":  # precent
+            key = 'percent'
+        elif method[0] == "d": #default
+            return_list = gl
+
+        if method[-2:] == "_a":  # default is ascending (false)
+            return_list = sorted(gl, key=lambda x: x[key], reverse=False)
+        elif method[-2:] == "_d":
+            return_list = sorted(gl, key=lambda x: x[key], reverse=True)
 
         return return_list

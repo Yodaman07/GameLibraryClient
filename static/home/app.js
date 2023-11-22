@@ -1,4 +1,4 @@
-var selected_sort_method;
+// var selected_sort_method;
 $(document).ready(function () {
     let sel_color = $("#btn-collection").data("selection-color")
     document.documentElement.style.setProperty("--selection_theme", sel_color)
@@ -19,64 +19,64 @@ $(window).click(function(e) {
 //     sortDirection(null, false)
 // })
 
-$("#arrow-up").click((arrow)=>{
-    sort(selected_sort_method, arrow.target, "a")
-})
-$("#arrow-down").click((arrow)=>{
-    sort(selected_sort_method, arrow.target, "d")
-})
+// $("#arrow-up").click((arrow)=>{
+//     sort(selected_sort_method, arrow.target, "a")
+// })
+// $("#arrow-down").click((arrow)=>{
+//     sort(selected_sort_method, arrow.target, "d")
+// })
 
-$(".arrow, .arrow-sel").click(function (arrow){
-    let methodObj;
-    $(".sort-selection").each(function(a, obj){
-        if(obj.firstElementChild.innerHTML === selected_sort_method){
-            methodObj = obj
-        }
-    })
+// $(".arrow, .arrow-sel").click(function (arrow){
+//     let methodObj;
+//     $(".sort-selection").each(function(a, obj){
+//         if(obj.firstElementChild.innerHTML === selected_sort_method){
+//             methodObj = obj
+//         }
+//     })
+//
+//     if ($("*").hasClass("arrow-sel") && $(arrow.target).hasClass("arrow")){
+//         console.log($(arrow.target))
+//         $(".arrow-sel").each(function (i, obj){
+//             $(obj).removeClass("arrow-sel").addClass("arrow")
+//             $(obj).css("background-color", "")
+//         })
+//     }else{
+//         console.log($("*").hasClass("arrow-sel"))
+//         console.log($(arrow.target).hasClass("arrow"))
+//         console.log($(arrow.target))
+//     }
+//
+//
+//     changeArrowState($(arrow.target), "toggle", methodObj)
+// })
 
-    if ($("*").hasClass("arrow-sel") && $(arrow.target).hasClass("arrow")){
-        console.log($(arrow.target))
-        $(".arrow-sel").each(function (i, obj){
-            $(obj).removeClass("arrow-sel").addClass("arrow")
-            $(obj).css("background-color", "")
-        })
-    }else{
-        console.log($("*").hasClass("arrow-sel"))
-        console.log($(arrow.target).hasClass("arrow"))
-        console.log($(arrow.target))
-    }
 
+// function changeArrowState(arrow, state, method){
+//     if(state === "toggle"){
+//         switch(arrow.hasClass("arrow")){
+//             case true:
+//                 // console.log("true")
+//                 arrow.removeClass("arrow").addClass("arrow-sel")
+//                 changeSortMethodColor(method, "active")
+//                 break
+//             case false:
+//                 // console.log("false")
+//                 arrow.removeClass("arrow-sel").addClass("arrow")
+//                 changeSortMethodColor(method, "inactive")
+//                 break
+//         }
+//     }
+// }
 
-    changeArrowState($(arrow.target), "toggle", methodObj)
-})
-
-
-function changeArrowState(arrow, state, method){
-    if(state === "toggle"){
-        switch(arrow.hasClass("arrow")){
-            case true:
-                // console.log("true")
-                arrow.removeClass("arrow").addClass("arrow-sel")
-                changeSortMethodColor(method, "active")
-                break
-            case false:
-                // console.log("false")
-                arrow.removeClass("arrow-sel").addClass("arrow")
-                changeSortMethodColor(method, "inactive")
-                break
-        }
-    }
-}
-
-function changeSortMethodColor(sortElmnt, state){
-    // console.log(sortElmnt, state)
-    let sel_color_hex = $("#btn-collection").data("selection-color")
-    if (state === "active"){
-        $(sortElmnt).css("background-color", sel_color_hex)
-    }else if (state === "inactive"){
-        $(sortElmnt).css("background-color", "")
-    }
-}
+// function changeSortMethodColor(sortElmnt, state){
+//     // console.log(sortElmnt, state)
+//     let sel_color_hex = $("#btn-collection").data("selection-color")
+//     if (state === "active"){
+//         $(sortElmnt).css("background-color", sel_color_hex)
+//     }else if (state === "inactive"){
+//         $(sortElmnt).css("background-color", "")
+//     }
+// }
 
 function searchGames(input) {
     let query = $(input).val()
@@ -133,24 +133,39 @@ function sortMenuClose(){
 }
 
 //Copied from https://stackoverflow.com/questions/3048838/jquery-css-color-value-returns-rgb
-$.fn.getHexBackgroundColor = function() {
-    var rgb = $(this).css('background-color');
-    rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
-    if (rgb == null){
-        return ""
-    }
-    function hex(x) {return ("0" + parseInt(x).toString(16).toUpperCase()).slice(-2);}
-    return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
+// $.fn.getHexBackgroundColor = function() {
+//     var rgb = $(this).css('background-color');
+//     rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+//     if (rgb == null){
+//         return ""
+//     }
+//     function hex(x) {return ("0" + parseInt(x).toString(16).toUpperCase()).slice(-2);}
+//     return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
+// }
+
+function resetSortButtons(selectedMode){
+    //Help from google ai on search
+    //https://www.google.com/search?q=get+all+elements+with+the+same+data+tag+js&oq=get+all+elements+with+the+same+data+tag+js&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIGCAEQRRhAMgYIAhBFGEDSAQg3MjUwajBqMagCALACAA&sourceid=chrome&ie=UTF-8
+    var allSections = document.querySelectorAll('[data-section]')
+    allSections.forEach((button)=>{
+        if ($(button).attr("data-section") !== selectedMode){
+            $(button).attr("data-active", 0)
+        }
+    })
 }
 
 function sort(method, elmnt, direction){
-    let sel_color_hex = $("#btn-collection").data("selection-color")
-    let hexbg = $(elmnt).getHexBackgroundColor()
+    // let sel_color_hex = $("#btn-collection").data("selection-color")
+    // let hexbg = $(elmnt).getHexBackgroundColor()
+    let data_active = $(elmnt).attr("data-active")
+    let active
+    data_active === '0' ? active = false : active = true
     let prefix;
     let suffix = "_" + direction;
 
-    if (hexbg !== sel_color_hex){
-        changeSortMethodColor(elmnt, "active")
+    resetSortButtons(method)
+    if (!active){
+        // changeSortMethodColor(elmnt, "active")
         switch(method){
             case "A→Z":
                 prefix = "a"
@@ -163,10 +178,21 @@ function sort(method, elmnt, direction){
                 break
         }
 
-    }else if (hexbg === sel_color_hex){
-        changeSortMethodColor(elmnt, "inactive")
+        //Ensures the other button isn't pressed
+        var parent = elmnt.parentElement
+        parent.childNodes.forEach((el)=>{
+            if ((el !== elmnt) && $(el).is("button")){
+                $(el).attr('data-active',0)
+            }
+        })
+
+        $(elmnt).attr("data-active", 1)
+        //https://stackoverflow.com/questions/13524107/how-to-set-data-attributes-in-html-elements
+    }else if (active){
+        // changeSortMethodColor(elmnt, "inactive")
         prefix = "d"
         suffix = ""
+        $(elmnt).attr("data-active", 0)
     } //Button color toggle
 
 
@@ -183,29 +209,29 @@ function sort(method, elmnt, direction){
     })
 }
 
-function sortDirection(index, on){
-    if (on){
-        let sort_dir = $(".sort-direction")
-        let sort_list = ['A→Z','Hr→Min','%']
-        selected_sort_method = sort_list[parseInt(index)-1]
-        switch (parseInt(index)){
-            case 1:
-                sort_dir.css("align-items", 'flex-start')
-                break
-            case 2:
-                sort_dir.css("align-items", 'center')
-                break
-            case 3:
-                sort_dir.css("align-items", 'flex-end')
-                break
-        }
-
-        sort_dir.prependTo($('#dropdown-bar'))
-        sort_dir.css("display", "flex")
-
-    }else{
-        let sort_dir = $(".sort-direction")
-        sort_dir.appendTo($('#dropdown-bar'))
-        sort_dir.css("display", "none")
-    }
-}
+// function sortDirection(index, on){
+//     if (on){
+//         let sort_dir = $(".sort-direction")
+//         let sort_list = ['A→Z','Hr→Min','%']
+//         selected_sort_method = sort_list[parseInt(index)-1]
+//         switch (parseInt(index)){
+//             case 1:
+//                 sort_dir.css("align-items", 'flex-start')
+//                 break
+//             case 2:
+//                 sort_dir.css("align-items", 'center')
+//                 break
+//             case 3:
+//                 sort_dir.css("align-items", 'flex-end')
+//                 break
+//         }
+//
+//         sort_dir.prependTo($('#dropdown-bar'))
+//         sort_dir.css("display", "flex")
+//
+//     }else{
+//         let sort_dir = $(".sort-direction")
+//         sort_dir.appendTo($('#dropdown-bar'))
+//         sort_dir.css("display", "none")
+//     }
+// }

@@ -27,9 +27,34 @@ body, html{
     background-color: grey;
 }
 
+[data-active = '0']{
+    background-color: #242424;
+}
 
+[data-active = '1']{
+    background-color: var(--selection_theme);
+}
 
-#settings-item, .item-unsel, .sort-selection, .arrow{
+.sort-selection button{
+    border-radius: 50%;
+    height: 25px;
+    width: 25px;
+    border-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+[data-active]:hover{
+    cursor: pointer;
+}
+.sort-selection{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#settings-item, .item-unsel, .arrow{
     transition: background-color 0.25s;
     background-color: #242424;
 }
@@ -135,7 +160,6 @@ body, html{
 
 
 
-
 #circle-separator{
     width: 10px;
     height: 10px;
@@ -148,13 +172,13 @@ body, html{
     width: 48px;
     position: absolute;
     top: 30px;
-    bottom: 0px;
+    bottom: -175px;
     border-radius: 17px;
     cursor: default;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 25px;
+    gap: 50px;
     padding: inherit;
 }
 
@@ -177,18 +201,19 @@ body, html{
 }
 
 /*https://stackoverflow.com/questions/5445491/height-equal-to-dynamic-width-css-fluid-layout*/
-.sort-selection{
+.sort-selection p{
     color: white;
     width: 100%;
-    padding-bottom: 50%;
     height: 0;
     border-radius: 15px;
     font-size: 12px;
     display: flex;
-    padding-top: 50%;
     align-items: center;
     justify-content: center;
     z-index: 10;
+    padding: 30% 5% 30% 5%;
+    margin: 5px;
+    background: green;
 }
 
 .item-sel#sort{

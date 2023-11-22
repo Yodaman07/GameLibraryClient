@@ -31,25 +31,31 @@
                              <div id="circle-separator" style="background: {{ themes[currentTheme]['colors'][3] }}" data-origin = "dropdown"></div>
                              <div id="dropdown-bar" style="background: {{ themes[currentTheme]['colors'][3] }}" data-origin = "dropdown">
                                  {% for i in ['A→Z','Hr→Min','%'] %}
-                                     <div class="sort-selection" data-origin = "dropdown" onmouseover="sortDirection('{{ loop.index }}', true)">
-                                        <p data-origin = "dropdown">{{i}}</p>
+                                     <div class="sort-selection" data-origin = "dropdown">
+                                        <button data-section='{{i}}' data-origin = "dropdown" data-active=0 onclick="sort('{{i}}', this, 'a')">
+                                            <img id='arrow-up' data-origin = "dropdown" src="/static/img/arrow.svg">
+                                        </button>
+                                        <p data-origin = "dropdown" style="background-color: {{themes[currentTheme]['colors'][2]}}">{{i}}</p>
+                                        <button data-section='{{i}}' data-origin = "dropdown" data-active=0 onclick="sort('{{i}}', this, 'd')">
+                                            <img id='arrow-down' data-origin = "dropdown" src="/static/img/arrow.svg">
+                                        </button>
                                      </div>
                                  {% endfor %}
                              </div>
 
 
-                              <div class="sort-direction">
-                                <div id="sort-gap" data-origin="hoversort"></div>
-                                <div class="sort-direction-container" style="background: {{ themes[currentTheme]['colors'][3] }}" data-origin="hoversort">
-                                    <div class="arrow" id="arrow-up" data-origin="hoversort">
-                                        <img src="/static/img/arrow.svg" alt="arrow-up" width="32px" height="32px" data-origin="hoversort">
-                                    </div>
-
-                                    <div class="arrow" id="arrow-down" data-origin="hoversort">
-                                        <img src="/static/img/arrow.svg" alt="arrow-down" width="32px" height="32px" data-origin="hoversort">
-                                    </div>
-                                </div>
-                              </div>
+{#                              <div class="sort-direction">#}
+{#                                <div id="sort-gap" data-origin="hoversort"></div>#}
+{#                                <div class="sort-direction-container" style="background: {{ themes[currentTheme]['colors'][3] }}" data-origin="hoversort">#}
+{#                                    <div class="arrow" id="arrow-up" data-origin="hoversort">#}
+{#                                        <img src="/static/img/arrow.svg" alt="arrow-up" width="32px" height="32px" data-origin="hoversort">#}
+{#                                    </div>#}
+{##}
+{#                                    <div class="arrow" id="arrow-down" data-origin="hoversort">#}
+{#                                        <img src="/static/img/arrow.svg" alt="arrow-down" width="32px" height="32px" data-origin="hoversort">#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                              </div>#}
 
 
                          </div>

@@ -18,9 +18,9 @@ secret_key = os.getenv("SECRET_KEY")
 app = Flask(__name__)
 app.secret_key = secret_key
 
-# [BG1, BG2, GameBG, SidebarBG, Sel, Highlight color, Text]
+# [BG1, BG2, GameBG, SidebarBG, Sel, Text]
 themes = {
-    "steam": {'colors': ["#6197FF", "#1F407E", "#1E5FDE", "#364561", "#80A9F6", "", "#FFFFFF"],
+    "steam": {'colors': ["#6197FF", "#1F407E", "#1E5FDE", "#364561", "#80A9F6", "#FFFFFF"],
               'icon': '/static/img/steam.svg'},
     "xbox": {'colors': ["#48BD4C", "#18641B", "#2ebf34", "#386D3A", "#82C985", "#FFFFFF"],
              'icon': '/static/img/xbox.svg'},

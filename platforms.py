@@ -116,8 +116,9 @@ class Steam:
                     percent = self.getPercentCompletion(i['appid'], self.steamID)
                     # https://stackoverflow.com/questions/27862725/how-to-get-last-played-on-for-steam-game-using-steam-api
 
-                    gameList.append(
+                    gameList.append(  # time_unformatted is in min
                         {"time_last_played": i['rtime_last_played'], "appid": i['appid'], "name": name, "time": time,
+                         "time_unformatted": i['playtime_forever'],
                          "img": img, 'alt_img': alt_img,
                          "percent": percent[0], "alt-percent": percent[1]}
                     )
@@ -168,7 +169,7 @@ class Xbox:
                         print(f"XBOX - getting data... ({game['titleId']})")
                         try:
                             percent = self.getPercent(game['titleId'])
-                            time = self.getTimePlayed(game['titleId'])
+                            time = self.getTimePlayed(game['titleId'], True)
                         except KeyError:
                             self.cache.set(game_list)
                             break
@@ -176,6 +177,7 @@ class Xbox:
                         game_list.append(
                             {"time_last_played": game['titleHistory']['lastTimePlayed'], "appid": int(game['titleId']),
                              "name": game['name'], "time": time,
+                             "time_unformatted": self.getTimePlayed(game['titleId'], False),
                              "img": game["displayImage"], 'alt_img': False,
                              "percent": percent[0],
                              "alt-percent": percent[1]}
@@ -217,7 +219,7 @@ class Xbox:
         except KeyError:
             return [0.00, '0/0']
 
-    def getTimePlayed(self, appid):
+    def getTimePlayed(self, appid, formatted):
         headers = {"accept": "*/*", 'x-authorization': self.api_key}
         r = requests.get(f"https://xbl.io/api/v2/achievements/stats/{appid}", headers=headers)
         try:
@@ -228,6 +230,11 @@ class Xbox:
 
         try:
             time = int(s['value'])
+            if not formatted:
+                if time == "N/A":
+                    return -1
+                else:
+                    return time
             minutes = time % 60
             hr = time // 60
             h = f"{hr} hrs" if hr > 1 else f"{hr} hr"
