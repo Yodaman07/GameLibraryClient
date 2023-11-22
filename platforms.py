@@ -94,6 +94,7 @@ class Steam:
         if r.status_code == 200:
             for i in r.json()["response"]["games"]:
                 if self.cache.check_if_data_exists(i['appid'], i['rtime_last_played']):
+                    # TODO (fix) --> Currently doesn't update data for game names
                     print(f"Steam - data exists... ({i['appid']})")
                     game_data = self.cache.get(i['appid'])
                     gameList.append(game_data)
@@ -115,8 +116,9 @@ class Steam:
                     percent = self.getPercentCompletion(i['appid'], self.steamID)
                     # https://stackoverflow.com/questions/27862725/how-to-get-last-played-on-for-steam-game-using-steam-api
 
-                    gameList.append(
+                    gameList.append(  # time_unformatted is in min
                         {"time_last_played": i['rtime_last_played'], "appid": i['appid'], "name": name, "time": time,
+                         "time_unformatted": i['playtime_forever'],
                          "img": img, 'alt_img': alt_img,
                          "percent": percent[0], "alt-percent": percent[1]}
                     )
@@ -167,7 +169,7 @@ class Xbox:
                         print(f"XBOX - getting data... ({game['titleId']})")
                         try:
                             percent = self.getPercent(game['titleId'])
-                            time = self.getTimePlayed(game['titleId'])
+                            time = self.getTimePlayed(game['titleId'], True)
                         except KeyError:
                             self.cache.set(game_list)
                             break
@@ -175,6 +177,7 @@ class Xbox:
                         game_list.append(
                             {"time_last_played": game['titleHistory']['lastTimePlayed'], "appid": int(game['titleId']),
                              "name": game['name'], "time": time,
+                             "time_unformatted": self.getTimePlayed(game['titleId'], False),
                              "img": game["displayImage"], 'alt_img': False,
                              "percent": percent[0],
                              "alt-percent": percent[1]}
@@ -191,7 +194,8 @@ class Xbox:
         # New xbox (one) games require the achievements from the endpoint below
         totalAchievementsPlayer = 0
         headers = {"accept": "*/*", 'x-authorization': self.api_key}
-        r = requests.get(f"https://xbl.io/api/v2/achievements/player/{self.xuid}/{appid}", headers=headers)
+        r = requests.get(f"https://xbl.io/api/v2/achievements/player/{self.getXUID(self.api_key)}/{appid}",
+                         headers=headers)
         try:
             totalAchievementsGame = len(r.json()["achievements"])
             for i in r.json()["achievements"]:
@@ -215,7 +219,7 @@ class Xbox:
         except KeyError:
             return [0.00, '0/0']
 
-    def getTimePlayed(self, appid):
+    def getTimePlayed(self, appid, formatted):
         headers = {"accept": "*/*", 'x-authorization': self.api_key}
         r = requests.get(f"https://xbl.io/api/v2/achievements/stats/{appid}", headers=headers)
         try:
@@ -226,6 +230,11 @@ class Xbox:
 
         try:
             time = int(s['value'])
+            if not formatted:
+                if time == "N/A":
+                    return -1
+                else:
+                    return time
             minutes = time % 60
             hr = time // 60
             h = f"{hr} hrs" if hr > 1 else f"{hr} hr"
@@ -244,12 +253,12 @@ class Xbox:
         return newlist
 
     # XUID isn't necessary
-    # def getXUID(self, api_key):
-    #     # api_key is already validated
-    #     headers = {"accept": "*/*", "x-authorization": api_key}
-    #     response = requests.get("https://xbl.io/api/v2/player/summary", headers=headers)
-    #     if response.status_code == 200:
-    #         return response.json()['people'][0]['xuid']
+    def getXUID(self, api_key):
+        # api_key is already validated
+        headers = {"accept": "*/*", "x-authorization": api_key}
+        response = requests.get("https://xbl.io/api/v2/player/summary", headers=headers)
+        if response.status_code == 200:
+            return response.json()['people'][0]['xuid']
 
 
 class ValidateCredentials:

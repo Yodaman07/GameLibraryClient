@@ -20,15 +20,54 @@
     {% if loggedin %}
         <div class="top-bar-container">
             <div class="top-bar" style="background: {{ themes[currentTheme]['colors'][3] }}">
-                <div id="btn-collection">
-                    <div class="item-unsel">
-                        <img src="/static/img/slider.svg" alt="slider" width="32px" height="32px">
+                <div id="btn-collection" data-selection-color="{{themes[currentTheme]['colors'][4]}}">
+                    <div class="item-unsel" id="sort" data-origin="unset">
+                        <img src="/static/img/slider.svg" alt="slider" width="32px" height="32px" data-origin="unset">
                     </div>
 
-                     <div class="item-unsel">
-                        <img src="/static/img/filter.svg" alt="filter" width="32px" height="32px">
+
+                    <div class="dropdown-container" data-origin = "dropdown">
+                         <div class="dropdown" data-origin = "dropdown">
+                             <div id="circle-separator" style="background: {{ themes[currentTheme]['colors'][3] }}" data-origin = "dropdown"></div>
+                             <div id="dropdown-bar" style="background: {{ themes[currentTheme]['colors'][3] }}" data-origin = "dropdown">
+                                 {% for i in ['A→Z','Hr→Min','%'] %}
+                                     <div class="sort-selection" data-origin = "dropdown">
+                                        <button data-section='{{i}}' data-origin = "dropdown" data-active=0 onclick="sort('{{i}}', this, 'a')">
+                                            <img id='arrow-up' data-origin = "dropdown" src="/static/img/arrow.svg">
+                                        </button>
+                                        <p data-origin = "dropdown" style="background-color: {{themes[currentTheme]['colors'][2]}}">{{i}}</p>
+                                        <button data-section='{{i}}' data-origin = "dropdown" data-active=0 onclick="sort('{{i}}', this, 'd')">
+                                            <img id='arrow-down' data-origin = "dropdown" src="/static/img/arrow.svg">
+                                        </button>
+                                     </div>
+                                 {% endfor %}
+                             </div>
+
+
+{#                              <div class="sort-direction">#}
+{#                                <div id="sort-gap" data-origin="hoversort"></div>#}
+{#                                <div class="sort-direction-container" style="background: {{ themes[currentTheme]['colors'][3] }}" data-origin="hoversort">#}
+{#                                    <div class="arrow" id="arrow-up" data-origin="hoversort">#}
+{#                                        <img src="/static/img/arrow.svg" alt="arrow-up" width="32px" height="32px" data-origin="hoversort">#}
+{#                                    </div>#}
+{##}
+{#                                    <div class="arrow" id="arrow-down" data-origin="hoversort">#}
+{#                                        <img src="/static/img/arrow.svg" alt="arrow-down" width="32px" height="32px" data-origin="hoversort">#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                              </div>#}
+
+
+                         </div>
+                    </div>
+
+                     <div class="item-unsel" id="filter" data-origin="unset">
+                        <img src="/static/img/filter.svg" alt="filter" width="32px" height="32px" data-origin="unset">
                     </div>
                 </div>
+
+
+
                 <div id="search-container">
                     <div class="search-bar">
                         <img src="/static/img/search.svg" alt="search-icon" width="32px" height="32px">
